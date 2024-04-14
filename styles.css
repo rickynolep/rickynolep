@@ -4,9 +4,23 @@ body {
 }
 
 h1 {
-    color: #15a1ff;
+    color: #333;
 }
 
 p {
     font-size: 18px;
+}
+
+.circle-image {
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin: 20px auto;
+}
+
+.circle-image img {
+    width: 100%;
+    height: auto;
+    display: block;
 }
