@@ -83,7 +83,7 @@ p {
     opacity: 0;
 }
 
-.icon-placeholder {
+.pill {
     width: 100px;
     height: 30px;
     background-color: rgba(255, 255, 255, 0.1);
@@ -94,21 +94,56 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
-    
+    transition: width 0.5s cubic-bezier(0.8, -0.5, 0.2, 1), height 0.5s cubic-bezier(0.8, -0.5, 0.2, 1);
 }
 
-.icon-placeholder i {
-    font-size: 2rem; /* Adjust the size of the icon */
+.discordtext img {
+    width: 100px;
+    height: 100px;
+    margin: 15px auto;
+    position: relative;
+}
+
+.kemonomimi {
+    display: none;
+    font-size: 13px;
+    margin: auto 25px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+
+.discordtext {
+    display: none;
+    font-size: 13px;
+    margin: auto 25px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.fade-out {
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+.fade-in {
+    opacity: 1;
+}
+
+.iconholder {
+    margin-top: 2px;
+}
+#discord {
     cursor: pointer;
 }
 
-.animated-underline {
+.underline {
     position: relative;
     text-decoration: none;
     color: #fdebda;
 }
 
-.animated-underline::after {
+.underline::after {
     content: '';
     position: absolute;
     left: 50%;
@@ -120,7 +155,7 @@ p {
     transition: width 0.3s ease;
 } 
 
-.animated-underline:hover::after,
+.underline:hover::after,
 .popup-trigger:focus + .animated-underline::after {
     width: 100%;
 }
@@ -146,7 +181,6 @@ p {
     }
 }
 
-/* Glowing text effect */
 .glowing-text {
     text-shadow: 0px 0px 10px #a52bf779, 0 0 30px #3336ff79, 0 0 60px #3352ff, 0 0 90px #3347ff, 0 0 120px #3579ff;
     animation: glowing 2s ease-in-out infinite alternate;
