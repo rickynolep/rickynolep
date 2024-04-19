@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var pill = document.querySelector('.pill');
     var kemonomimi = document.querySelector('.kemonomimi');
     var discord = document.querySelector('.discord');
-    var discordtext = document.querySelector('.discordtext');
+    var discordpill = document.querySelector('.discordpill');
 
     // Variables to keep track of active functions and timeouts
     var activeFunction = null;
@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
             hideActiveFunction();
         }
         showDiscord();
-        changeUrl('/rikomunity');
     });
 
     function showKemonomimi() {
@@ -58,19 +57,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showDiscord() {
         clearTimeout(transitionTimeout);
-        pill.style.width = '380px';
+        pill.style.width = '320px';
         pill.style.height = '100px';
         icon.classList.add('fade-out');
         setTimeout(function() {
-            discordtext.style.display = 'block';
+            discordpill.style.display = 'inline-flex';
         }, 300);
         setTimeout(function() {
             icon.style.display = 'none';
-            discordtext.style.opacity = '1';
+            discordpill.style.opacity = '1';
         }, 400);
 
         transitionTimeout = setTimeout(function() {
-            discordtext.style.opacity = '0';
+            discordpill.style.opacity = '0';
             setTimeout(function() {
                 pill.style.width = '100px';
                 pill.style.height = '30px';
@@ -80,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 icon.classList.remove('fade-out');
             }, 400);
             setTimeout(function() {
-                discordtext.style.display = 'none';
+                discordpill.style.display = 'none';
             }, 200);
         }, 5000);
 
@@ -95,9 +94,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 kemonomimi.style.display = 'none';
             }, 200);
         } else if (activeFunction === 'discord') {
-            discordtext.style.opacity = '0';
+            discordpill.style.opacity = '0';
             setTimeout(function() {
-                discordtext.style.display = 'none';
+                discordpill.style.display = 'none';
             }, 200);
         }
     }

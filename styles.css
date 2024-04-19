@@ -35,11 +35,13 @@ h1 {
     font-family: "Unbounded";
     font-weight: 400;
 }
-
 p {
     font-size: 18px;
 }
-
+.glowing-text {
+    text-shadow: 0px 0px 10px #a52bf779, 0 0 30px #3336ff79, 0 0 60px #3352ff, 0 0 90px #3347ff, 0 0 120px #3579ff;
+    animation: glowing 2s ease-in-out infinite alternate;
+}
 .profile-image-container {
     width: 150px;
     height: 150px;
@@ -66,21 +68,12 @@ p {
     z-index: -1;
 }
 
-#opening-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 1;
-    opacity: 1;
-    transition: opacity 1s ease-in;
-    pointer-events: none;
-}
-
-.fade-out {
+.kemonomimi {
+    display: none;
+    font-size: 13px;
+    margin: auto 25px;
     opacity: 0;
+    transition: opacity 0.5s ease;
 }
 
 .pill {
@@ -96,51 +89,84 @@ p {
     align-items: center;
     transition: width 0.5s cubic-bezier(0.8, -0.5, 0.2, 1), height 0.5s cubic-bezier(0.8, -0.5, 0.2, 1);
 }
-
-.discordtext img {
-    width: 100px;
-    height: 100px;
-    margin: 15px auto;
-    position: relative;
+.button {
+    width: 200px;
+    height: 30px;
+    background-color: #596cec;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 10px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: width 0.5s cubic-bezier(0.8, -0.5, 0.2, 1), height 0.5s cubic-bezier(0.8, -0.5, 0.2, 1);
+    z-index: 2;
+    cursor: pointer;
 }
-
-.kemonomimi {
+.discordpill {
     display: none;
-    font-size: 13px;
-    margin: auto 25px;
     opacity: 0;
     transition: opacity 0.5s ease;
 }
 
+.discord:hover::before,
+.discord:hover::after {
+    animation: glowing 1.5s linear infinite;
+}
 
-.discordtext {
-    display: none;
+#discordimg {
+    width: 90px;
+    height: 90px;
+    position: absolute;
+    margin: -47px -153px;
+}
+#discordipill {
+    position: absolute;
+    margin: -45px -65px;
     font-size: 13px;
-    margin: auto 25px;
-    opacity: 0;
-    transition: opacity 0.5s ease;
+}
+#discordipill h1 {
+    font-size: 14px;
+}
+#discordipill p {
+    font-size: 14px;
 }
 
 .fade-out {
-    transition: opacity 0.3s ease;
     opacity: 0;
 }
-
 .fade-in {
     opacity: 1;
 }
 
 .iconholder {
-    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    transition: opacity 0.2s ease;
 }
 #discord {
     cursor: pointer;
+    position: relative;
+    display: inline-block;
 }
-
+#discord-glow {
+    position: absolute;
+    height: 20px;
+    top: 4px;
+    left: 38px;
+    opacity: 0;
+    filter: blur(2px);
+    transition: opacity 0.5s ease;
+    z-index: 1;
+}
+#discord-glow:hover {
+    opacity: 0.7;
+}
 .underline {
     position: relative;
     text-decoration: none;
     color: #fdebda;
+    cursor: pointer;
 }
 
 .underline::after {
@@ -154,11 +180,7 @@ p {
     background-color: #fdebda;
     transition: width 0.3s ease;
 } 
-
-.underline:hover::after,
-.popup-trigger:focus + .animated-underline::after {
-    width: 100%;
-}
+.underline:hover::after, .popup-trigger:focus + .animated-underline::after {width: 100%;}
 
 @keyframes slideIn {
     from {
@@ -179,11 +201,6 @@ p {
         transform: translateX(-50%) translateY(-20px);
         opacity: 0;
     }
-}
-
-.glowing-text {
-    text-shadow: 0px 0px 10px #a52bf779, 0 0 30px #3336ff79, 0 0 60px #3352ff, 0 0 90px #3347ff, 0 0 120px #3579ff;
-    animation: glowing 2s ease-in-out infinite alternate;
 }
 @keyframes glowing {
     0% {
