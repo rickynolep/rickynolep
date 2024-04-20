@@ -5,18 +5,27 @@ document.addEventListener('DOMContentLoaded', function() {
     var kemonomimi = document.querySelector('.kemonomimi');
     var discord = document.querySelector('.discord');
     var discordpill = document.querySelector('.discordpill');
-
-    // Variables to keep track of active functions and timeouts
+    var discordbutton = document.querySelector('.discordbutton');
     var activeFunction = null;
     var transitionTimeout;
 
+    discordbutton.addEventListener('click', function() {
+        discordbutton.style.transform = 'scale(0.95)';
+        changeUrl("/Rikomunity");
+        setTimeout(function() {
+            document.getElementById("join").textContent = "Redirecting..";
+        }, 300);
+        setTimeout(function() {
+            discordbutton.style.transform = 'scale(1)';
+            window.location.href = "/Rikomunity";
+        }, 300);
+    });
     kemonomimiSpan.addEventListener('click', function() {
         if (activeFunction !== null && activeFunction !== 'kemonomimi') {
             hideActiveFunction();
         }
         showKemonomimi();
     });
-
     discord.addEventListener('click', function() {
         if (activeFunction !== null && activeFunction !== 'discord') {
             hideActiveFunction();
@@ -42,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(function() {
                 pill.style.width = '100px';
                 pill.style.height = '30px';
-                icon.style.display = 'block';
+                icon.style.display = 'inline-block';
             }, 200);
             setTimeout(function() {
                 icon.classList.remove('fade-out');
@@ -73,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(function() {
                 pill.style.width = '100px';
                 pill.style.height = '30px';
-                icon.style.display = 'block';
+                icon.style.display = 'inline-block';
             }, 200);
             setTimeout(function() {
                 icon.classList.remove('fade-out');

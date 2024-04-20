@@ -89,7 +89,7 @@ p {
     align-items: center;
     transition: width 0.5s cubic-bezier(0.8, -0.5, 0.2, 1), height 0.5s cubic-bezier(0.8, -0.5, 0.2, 1);
 }
-.button {
+.discordbutton {
     width: 200px;
     height: 30px;
     background-color: #596cec;
@@ -99,10 +99,16 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: width 0.5s cubic-bezier(0.8, -0.5, 0.2, 1), height 0.5s cubic-bezier(0.8, -0.5, 0.2, 1);
+    transition: transform 0.5s cubic-bezier(0.8, -0.5, 0.2, 1), background-color 0.3s ease-in-out;
     z-index: 2;
     cursor: pointer;
 }
+.discordbutton:hover {
+    background-color: #6a7bee;
+    margin: 10px auto;
+    display: flex;
+}
+
 .discordpill {
     display: none;
     opacity: 0;
@@ -138,22 +144,17 @@ p {
 .fade-in {
     opacity: 1;
 }
-
 .iconholder {
-    display: flex;
-    align-items: center;
     transition: opacity 0.2s ease;
+    cursor: pointer;
 }
 #discord {
-    cursor: pointer;
-    position: relative;
+    position: absolute;
     display: inline-block;
+    margin: 2px;
 }
 #discord-glow {
-    position: absolute;
     height: 20px;
-    top: 4px;
-    left: 38px;
     opacity: 0;
     filter: blur(2px);
     transition: opacity 0.5s ease;
@@ -168,7 +169,6 @@ p {
     color: #fdebda;
     cursor: pointer;
 }
-
 .underline::after {
     content: '';
     position: absolute;
@@ -181,7 +181,6 @@ p {
     transition: width 0.3s ease;
 } 
 .underline:hover::after, .popup-trigger:focus + .animated-underline::after {width: 100%;}
-
 @keyframes slideIn {
     from {
         transform: translateX(-50%) translateY(-20px);
