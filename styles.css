@@ -1,71 +1,117 @@
 body {
-    background-color: rgb(32, 32, 32);
+    background-color: #202020;
     font-family: Arial, sans-serif;
-    text-align: center;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+    position: relative;
 }
 
 .container {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.content {
+.material-symbols-rounded {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    transition: opacity 2s ease-out;
+    bottom: 30px;
+    scale: 2.5;
+    user-select: none;
+    color: transparent;
+    background-image: linear-gradient(#cfcfcf, #202020, #202020, #cfcfcf);
+    background-size: 200% 200%;
+    background-clip: text;
+    animation: grad-down 3s linear infinite;
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 200,
+    'GRAD' 200,
+    'opsz' 48
+}
+
+.profile img {
+    width: 200px;
+    border-radius: 50%;
+}
+
+.blur {
+    left: 0;
+    right: 0;
+    margin: 0;
+    z-index: -1;
+    filter: blur(15px);
+    position: absolute;
+}
+
+.grad-bluple {
+    z-index: -1;
+    color: transparent;
+    background-image: linear-gradient(to right, #3b80ff, #c550fc, #3b80ff);
+    background-clip: text;
+    background-size: 200% 200%;
+    animation: grad-right 7.5s linear infinite;
 }
 
 h1, p {
-    /* Global Color */
     color: #e6e6e6;
     font-family: "Questrial";
     font-weight: 200;
-    margin: 5px 0;
+    font-size: 18px;
+    margin: 8px;
     padding: 0;
 }
 
 h1 {
+    margin-bottom: -5px;
     font-family: "Unbounded";
+    font-size: 30px;
     font-weight: 400;
 }
-p {
-    font-size: 18px;
-}
-.glowing-text {
-    text-shadow: 0px 0px 10px #a52bf779, 0 0 30px #3336ff79, 0 0 60px #3352ff, 0 0 90px #3347ff, 0 0 120px #3579ff;
-    animation: glowing 2s ease-in-out infinite alternate;
-}
-.profile-image-container {
-    width: 150px;
-    height: 150px;
-    margin: 15px auto;
+
+.underline {
     position: relative;
+    color: transparent;
+    background-image: linear-gradient(to right, #ffe3c0, #ffb476, #ffe3c0);
+    background-clip: text;
+    background-size: 200% 200%;
+    animation: grad-right 5s linear infinite;
+    cursor: pointer;
 }
 
-.profile-image {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 50%;
-}
-
-.blur-frame {
+.underline::after {
+    content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    overflow: hidden;
-    filter: blur(20px);
-    z-index: -1;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -0.5px;
+    width: 0;
+    height: 0.5px;
+    background-color: #ffc493;
+    transition: width 0.3s ease;
+} 
+
+.underline:hover::after, .popup-trigger:focus + .animated-underline::after {width: 100%;}
+
+.pill {
+    width: 100px;
+    height: 30px;
+    margin: 8px auto;
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: width 0.5s cubic-bezier(0.8, -0.5, 0.2, 1), height 0.5s cubic-bezier(0.8, -0.5, 0.2, 1);
 }
 
 .kemonomimi {
@@ -76,19 +122,6 @@ p {
     transition: opacity 0.5s ease;
 }
 
-.pill {
-    width: 100px;
-    height: 30px;
-    background-color: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    margin: 10px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: width 0.5s cubic-bezier(0.8, -0.5, 0.2, 1), height 0.5s cubic-bezier(0.8, -0.5, 0.2, 1);
-}
 .discordbutton {
     width: 200px;
     height: 30px;
@@ -103,6 +136,7 @@ p {
     z-index: 2;
     cursor: pointer;
 }
+
 .discordbutton:hover {
     background-color: #6a7bee;
     margin: 10px auto;
@@ -163,49 +197,21 @@ p {
 #discord-glow:hover {
     opacity: 0.7;
 }
-.underline {
-    position: relative;
-    text-decoration: none;
-    color: #fdebda;
-    cursor: pointer;
-}
-.underline::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: -0.5px;
-    width: 0;
-    height: 0.5px;
-    background-color: #fdebda;
-    transition: width 0.3s ease;
-} 
-.underline:hover::after, .popup-trigger:focus + .animated-underline::after {width: 100%;}
-@keyframes slideIn {
-    from {
-        transform: translateX(-50%) translateY(-20px);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(-50%);
-        opacity: 1;
-    }
-}
-@keyframes slideOut {
-    from {
-        transform: translateX(-50%);
-        opacity: 1;
-    }
-    to {
-        transform: translateX(-50%) translateY(-20px);
-        opacity: 0;
-    }
-}
-@keyframes glowing {
+
+@keyframes grad-right {
     0% {
-        text-shadow: 0px 0px 10px #a52bf71c, 0 0 30px #3336ff79, 0 0 60px #3352ff, 0 0 90px #3347ff, 0 0 120px #3579ff;
+        background-position: 0% 50%;
     }
     100% {
-        text-shadow: 9px 9px 10px #a52bf71c, 0 0 30px #3336ff79, 0 0 60px #3352ff, 0 0 90px #3347ff, 0 0 120px #3579ff;
+        background-position: 200% 50%;
+    }
+}
+
+@keyframes grad-down {
+    0% {
+        background-position: 50% 200%;
+    }
+    100% {
+        background-position: 50% 0%;
     }
 }

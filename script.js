@@ -11,13 +11,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     discordbutton.addEventListener('click', function() {
         discordbutton.style.transform = 'scale(0.95)';
-        changeUrl("/Rikomunity");
+        changeUrl("/rikomunity");
         setTimeout(function() {
             document.getElementById("join").textContent = "Redirecting..";
         }, 300);
         setTimeout(function() {
             discordbutton.style.transform = 'scale(1)';
-            window.location.href = "/Rikomunity";
+            window.location.href = "/rikomunity";
         }, 300);
     });
     kemonomimiSpan.addEventListener('click', function() {
