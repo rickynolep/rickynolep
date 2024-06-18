@@ -1,6 +1,10 @@
 body {
     background-color: #202020;
-    font-family: Arial, sans-serif;
+    text-align: center;
+    font-family: "Questrial";
+    color: #e6e6e6;
+    font-weight: 200;
+    font-size: 18px;
     margin: 0;
     padding: 0;
     display: flex;
@@ -8,38 +12,32 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    text-align: center;
-    position: relative;
-}
-
-.container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    overflow: hidden;
+    user-select: none;
+    animation: blur-out 2s ease-in-out;
 }
 
 .material-symbols-rounded {
-    position: absolute;
-    bottom: 30px;
-    scale: 2.5;
-    user-select: none;
+    scale: 2;
+    top: 90vh;
+    z-index: -1;
+    position: fixed;
     color: transparent;
-    background-image: linear-gradient(#cfcfcf, #202020, #202020, #cfcfcf);
-    background-size: 200% 200%;
     background-clip: text;
-    animation: grad-down 3s linear infinite;
+    background-size: 200% 200%;
+    background-image: linear-gradient(#cfcfcf, #202020, #202020, #cfcfcf);
+    animation: grad-up 3s linear infinite;
     font-variation-settings:
     'FILL' 0,
     'wght' 200,
     'GRAD' 200,
-    'opsz' 48
+    'opsz' 48;
 }
 
 .profile img {
     width: 200px;
     border-radius: 50%;
+    
 }
 
 .blur {
@@ -51,9 +49,10 @@ body {
     position: absolute;
 }
 
-.grad-bluple {
+.grad-head {
     z-index: -1;
     color: transparent;
+    animation: fade-in 8s ease-out;
     background-image: linear-gradient(to right, #3b80ff, #c550fc, #3b80ff);
     background-clip: text;
     background-size: 200% 200%;
@@ -61,12 +60,7 @@ body {
 }
 
 h1, p {
-    color: #e6e6e6;
-    font-family: "Questrial";
-    font-weight: 200;
-    font-size: 18px;
-    margin: 8px;
-    padding: 0;
+    margin: 6px;
 }
 
 h1 {
@@ -98,7 +92,9 @@ h1 {
     transition: width 0.3s ease;
 } 
 
-.underline:hover::after, .popup-trigger:focus + .animated-underline::after {width: 100%;}
+.underline:hover::after, .popup-trigger:focus + .animated-underline::after {
+    width: 100%;
+}
 
 .pill {
     width: 100px;
@@ -120,6 +116,7 @@ h1 {
     margin: auto 25px;
     opacity: 0;
     transition: opacity 0.5s ease;
+    user-select: text;
 }
 
 .discordbutton {
@@ -127,7 +124,7 @@ h1 {
     height: 30px;
     background-color: #596cec;
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid #ffffff1a;
     margin: 10px auto;
     display: flex;
     justify-content: center;
@@ -149,55 +146,64 @@ h1 {
     transition: opacity 0.5s ease;
 }
 
-.discord:hover::before,
-.discord:hover::after {
+.discord:hover::before, .discord:hover::after {
     animation: glowing 1.5s linear infinite;
 }
 
 #discordimg {
-    width: 90px;
     height: 90px;
-    position: absolute;
     margin: -47px -153px;
 }
+
 #discordipill {
     position: absolute;
     margin: -45px -65px;
     font-size: 13px;
 }
-#discordipill h1 {
-    font-size: 14px;
-}
-#discordipill p {
+
+#discordipill h1, #discordipill p {
     font-size: 14px;
 }
 
-.fade-out {
-    opacity: 0;
-}
-.fade-in {
-    opacity: 1;
-}
 .iconholder {
     transition: opacity 0.2s ease;
     cursor: pointer;
 }
+
 #discord {
     position: absolute;
     display: inline-block;
     margin: 2px;
 }
+
 #discord-glow {
-    height: 20px;
+    height: 22px;
     opacity: 0;
     filter: blur(2px);
     transition: opacity 0.5s ease;
     z-index: 1;
 }
+
 #discord-glow:hover {
     opacity: 0.7;
 }
 
+.fade-out {
+    opacity: 0;
+}
+
+.fade-in {
+    opacity: 1;
+}
+
+@keyframes blur-out {
+    0% {
+        filter: blur(100px);
+    }
+    100% {
+        filter: blur(0px);
+    }
+}
 @keyframes grad-right {
     0% {
         background-position: 0% 50%;
@@ -206,12 +212,11 @@ h1 {
         background-position: 200% 50%;
     }
 }
-
-@keyframes grad-down {
+@keyframes grad-up {
     0% {
-        background-position: 50% 200%;
+        background-position: 50% 0%;
     }
     100% {
-        background-position: 50% 0%;
+        background-position: 50% 200%;
     }
 }

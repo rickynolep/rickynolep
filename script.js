@@ -91,7 +91,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 discordpill.style.display = 'none';
             }, 200);
         }, 5000);
-
         activeFunction = 'discord';
     }
 
