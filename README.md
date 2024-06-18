@@ -1,4 +1,4 @@
-# ✨ Ricky Nolep // An autodidact developer who loves kemonomimi
+# ✨ Ricky Nolep // Autodidact developer loves kemonomimi
 <img align=right src="https://github-readme-stats.vercel.app/api?username=rickynolep&theme=react&hide_border=true&include_all_commits=true&count_private=false" width="45%">
 
 - 💞 Teenager from Indonesia  (_still in High School btw.._)
