@@ -1,9 +1,9 @@
-# ✨ Ricky Nolep // Autodidact developer loves kemonomimi
+# ✨ Ricky Nolep // Autodidact developer who loves kemonomimi
 <img align=right src="https://github-readme-stats.vercel.app/api?username=rickynolep&theme=react&hide_border=true&include_all_commits=true&count_private=false" width="45%">
 
 - 💞 Teenager from Indonesia  (_still in High School btw.._)
 - 💻 Can do editing too! really like making motion graphics
-- 💤 Dont have live at all and watch anime all days
+- 💤 Dont have live at all and watch anime all days (_really.._)
 <p align=center><i>“I hate when people call kemonomimi is a furry even tho its completely different why did you guys dont understand!?”</i>
 
 ## 🏷️ Tags
