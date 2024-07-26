@@ -14,7 +14,7 @@ body {
     min-height: 100vh;
     overflow: hidden;
     user-select: none;
-    animation: blur-out 2s ease-in-out;
+    animation: blur-outs 2s ease-in-out;
 }
 
 .material-symbols-rounded {
