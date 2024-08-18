@@ -17,23 +17,6 @@ body {
     animation: blur-outs 2s ease-in-out;
 }
 
-.material-symbols-rounded {
-    scale: 2;
-    top: 90vh;
-    z-index: -1;
-    position: fixed;
-    color: transparent;
-    background-clip: text;
-    background-size: 200% 200%;
-    background-image: linear-gradient(#cfcfcf, #202020, #202020, #cfcfcf);
-    animation: grad-up 3s linear infinite;
-    font-variation-settings:
-    'FILL' 0,
-    'wght' 200,
-    'GRAD' 200,
-    'opsz' 48;
-}
-
 .profile img {
     width: 200px;
     border-radius: 50%;
