@@ -11,13 +11,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     discordbutton.addEventListener('click', function() {
         discordbutton.style.transform = 'scale(0.95)';
-        changeUrl("/wa");
+        changeUrl("/rainy/wa");
         setTimeout(function() {
             document.getElementById("join").textContent = "Membuka WhatsApp..";
         }, 300);
         setTimeout(function() {
             discordbutton.style.transform = 'scale(1)';
-            window.location.href = "/wa";
+            window.location.href = "/rainy/wa";
         }, 300);
     });
     kemonomimiSpan.addEventListener('click', function() {
