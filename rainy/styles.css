@@ -1,0 +1,205 @@
+body {
+    background-color: #202020;
+    text-align: center;
+    font-family: "Questrial";
+    color: #e6e6e6;
+    font-weight: 200;
+    font-size: 18px;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    user-select: none;
+    animation: blur-outs 2s ease-in-out;
+}
+
+.profile img {
+    width: 200px;
+    border-radius: 50%;
+    
+}
+
+.blur {
+    left: 0;
+    right: 0;
+    margin: 0;
+    z-index: -1;
+    filter: blur(15px);
+    position: absolute;
+}
+
+.grad-head {
+    z-index: -1;
+    color: transparent;
+    animation: fade-in 8s ease-out;
+    background-image: linear-gradient(to right, #3b80ff, #00d8e7, #3b80ff);
+    background-clip: text;
+    background-size: 200% 200%;
+    animation: grad-right 7.5s linear infinite;
+}
+
+h1, p {
+    margin: 6px;
+}
+
+h1 {
+    margin-bottom: -5px;
+    font-family: "Unbounded";
+    font-size: 30px;
+    font-weight: 400;
+}
+
+.underline {
+    position: relative;
+    color: transparent;
+    background-image: linear-gradient(to right, #d2ffc0, #76ff9f, #c0ffd0);
+    background-clip: text;
+    background-size: 200% 200%;
+    animation: grad-right 5s linear infinite;
+    cursor: pointer;
+}
+
+.underline::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -0.5px;
+    width: 0;
+    height: 0.5px;
+    background-color: #4ae62b;
+    transition: width 0.3s ease;
+} 
+
+.underline:hover::after, .popup-trigger:focus + .animated-underline::after {
+    width: 100%;
+}
+
+.pill {
+    width: 100px;
+    height: 30px;
+    margin: 8px auto;
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: width 0.5s cubic-bezier(0.8, -0.5, 0.2, 1), height 0.5s cubic-bezier(0.8, -0.5, 0.2, 1);
+}
+
+.kemonomimi {
+    display: none;
+    font-size: 13px;
+    margin: auto 25px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    user-select: text;
+}
+
+.discordbutton {
+    width: 250px;
+    height: 30px;
+    background-color: #596cec;
+    border-radius: 20px;
+    border: 1px solid #ffffff1a;
+    margin: 10px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.5s cubic-bezier(0.8, -0.5, 0.2, 1), background-color 0.3s ease-in-out;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.discordbutton:hover {
+    background-color: #6a7bee;
+    margin: 10px auto;
+    display: flex;
+}
+
+.discordpill {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.discord:hover::before, .discord:hover::after {
+    animation: glowing 1.5s linear infinite;
+}
+
+#discordimg {
+    height: 90px;
+    margin: -47px -153px;
+}
+
+#discordipill {
+    position: absolute;
+    margin: -45px -125px;
+    font-size: 13px;
+}
+
+#discordipill h1, #discordipill p {
+    font-size: 14px;
+}
+
+.iconholder {
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+}
+
+#discord {
+    position: absolute;
+    display: inline-block;
+    margin: 2px;
+}
+
+#discord-glow {
+    height: 22px;
+    opacity: 0;
+    filter: blur(2px);
+    transition: opacity 0.5s ease;
+    z-index: 1;
+}
+
+#discord-glow:hover {
+    opacity: 0.7;
+}
+
+.fade-out {
+    opacity: 0;
+}
+
+.fade-in {
+    opacity: 1;
+}
+
+@keyframes blur-out {
+    0% {
+        filter: blur(100px);
+    }
+    100% {
+        filter: blur(0px);
+    }
+}
+@keyframes grad-right {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 200% 50%;
+    }
+}
+@keyframes grad-up {
+    0% {
+        background-position: 50% 0%;
+    }
+    100% {
+        background-position: 50% 200%;
+    }
+}
