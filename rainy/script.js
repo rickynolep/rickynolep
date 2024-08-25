@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300);
         setTimeout(function() {
             discordbutton.style.transform = 'scale(1)';
-            window.location.href = "/wa";
+            window.location.href = "/rainy/wa";
         }, 300);
     });
     kemonomimiSpan.addEventListener('click', function() {
