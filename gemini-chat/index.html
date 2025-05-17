@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HYZEN AI Chat</title>
   <style>
     body { font-family: Arial; padding: 20px; background: #f0f0f0; }
@@ -15,10 +16,10 @@
 <body>
   <h2>💬 HYZEN</h2>
   <p>Masukkan API Key kamu:</p>
-  <input type="text" id="apiKeyInput" placeholder="Gemini API Key kamu di sini" size="50">
+  <input type="text" id="apiKeyInput" placeholder="Gemini API Key kamu di sini" style="flex: 1;">
   <div id="chat"></div>
   <div id="input-area">
-    <input type="text" id="userInput" placeholder="Tulis pesan..." size="50">
+    <input type="text" id="userInput" placeholder="Tulis pesan..." style="flex: 1;">
     <button onclick="sendMessage()" id="sendBtn">Kirim</button>
   </div>
   <script src="script.js"></script>

@@ -4,3 +4,28 @@
   right: 10px;
   z-index: 999;
 }
+body {
+  font-size: clamp(14px, 2.5vw, 18px);
+  font-family: Arial;
+  padding: 20px;
+  background: #f0f0f0;
+  max-width: 600px;
+  margin: auto;
+}
+@media (max-width: 600px) {
+  body {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 18px;
+  }
+}
+#input-area {
+  display: flex;
+  gap: 10px;
+  position: sticky;
+  bottom: 0;
+  background: #f0f0f0;
+  padding-bottom: 10px;
+}
