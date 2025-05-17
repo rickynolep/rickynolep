@@ -12,10 +12,6 @@ async function sendMessage() {
 
   const userMsg = input.value.trim();
   if (!userMsg) return;
-  if (!apiKey) {
-    alert("Masukkan API Key dulu bro!");
-    return;
-  }
 
   // Tampilkan pesan user
   chat.innerHTML += `<p class="user"><strong>Kamu:</strong> ${userMsg}</p>`;
