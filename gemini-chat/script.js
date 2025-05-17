@@ -1,5 +1,5 @@
 let chatHistory = [];
-let apiKey = "AIzaSyAZC6stZsv9YEwW0irv-AuKd0Nb2_cN6vw";
+const apiKey = "AIzaSyAZC6stZsv9YEwW0irv-AuKd0Nb2_cN6vw";
 
 // Ambil API Key dari input saat user ngetik
 document.getElementById("apiKeyInput").addEventListener("change", (e) => {
