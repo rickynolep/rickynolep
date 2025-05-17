@@ -1,27 +1,41 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HYZEN AI Chat</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HYZEN - Chat & Search</title>
   <style>
     body { font-family: Arial; padding: 20px; background: #f0f0f0; }
-    #chat { border: 1px solid #ccc; padding: 10px; height: 400px; overflow-y: auto; background: white; margin-bottom: 10px; }
-    #input-area { display: flex; gap: 10px; }
+    #chat, .search-box {
+      border: 1px solid #ccc; padding: 10px; background: white;
+      margin-bottom: 20px;
+    }
+    #chat { height: 300px; overflow-y: auto; }
+    #input-area, .search-box { display: flex; gap: 10px; }
     input, button { padding: 10px; font-size: 1em; }
-    .user { color: blue; }
-    .ai { color: green; }
+    .user { color: black; }
+    .ai { color: red; }
+    footer { margin-top: 30px; text-align: center; }
   </style>
 </head>
 <body>
-  <h2>💬 HYZEN</h2>
-  <p>Masukkan API Key kamu:</p>
-  <input type="text" id="apiKeyInput" placeholder="Gemini API Key kamu di sini" style="flex: 1;">
+
+  <h2>💬 HYZEN AI Chat</h2>
   <div id="chat"></div>
   <div id="input-area">
-    <input type="text" id="userInput" placeholder="Tulis pesan..." style="flex: 1;">
-    <button onclick="sendMessage()" id="sendBtn">Kirim</button>
+    <input type="text" id="userInput" placeholder="Ketik Pesan" style="flex: 1;">
+    <button id="sendBtn">Kirim</button>
   </div>
+
+  <h2>🔍 HYZEN Search</h2>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Cari" style="flex: 1;">
+    <button id="searchBtn">Cari</button>
+  </div>
+
+  <footer>Made with 💖 by HYZEN Group</footer>
+
+  <!-- Ini yang kita tambahkan buat hubungkan ke file script.js -->
   <script src="script.js"></script>
 </body>
 </html>
