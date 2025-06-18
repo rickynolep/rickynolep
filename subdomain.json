@@ -8,6 +8,8 @@
     },
     "record": {
         "CNAME": "rickynolep.github.io",
-        "TXT": "dh=949127236c133a9bafd620117d8bdf31ca211150"
+        "TXT": {
+            "_discord": "dh=949127236c133a9bafd620117d8bdf31ca211150"
+        }
     }
 } 
