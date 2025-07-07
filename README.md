@@ -4,7 +4,7 @@
 - 👦 Teenager from Indonesia  (_still in High School btw.._)
 - 💻 Can do editing too! really like making motion graphics
 - 💤 Dont have live at all and watch anime all days (_really.._)
-<p align=center><i>“Kemonomimi and furries are different okay!?”</i>
+<p align=center><i>“Kemonomimi and furries are different okay!?”<br></i> ⋇ ⋆✦⋆ ⋇ 
 
 ## 🏷️ Tags
 <div align=center>
