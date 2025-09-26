@@ -1,25 +1,20 @@
 # ✨ Ricky Nolep // Autodidact developer who loves kemonomimi
 <img align=right src="https://github-readme-stats.vercel.app/api?username=rickynolep&theme=react&hide_border=true&include_all_commits=true&count_private=false" width="45%">
 
-- 💞 Teenager from Indonesia  (_still in High School btw.._)
+- 👦 Teenager from Indonesia  (_still in High School btw.._)
 - 💻 Can do editing too! really like making motion graphics
 - 💤 Dont have live at all and watch anime all days (_really.._)
-<p align=center><i>“I hate when people call kemonomimi is a furry even tho its completely different why did you guys dont understand!?”</i>
+<p align=center><i>“Kemonomimi and furries are different okay!?”<br></i> ⋇ ⋆✦⋆ ⋇ 
 
 ## 🏷️ Tags
 <div align=center>
-<img alt="Markdown" src="https://img.shields.io/badge/markdown-%23000000.svg?style=for-the-badge&logo=markdown&logoColor=white">
-<img alt="Adobe After Effects" src="https://img.shields.io/badge/Adobe%20After%20Effects-9999FF.svg?style=for-the-badge&logo=Adobe%20After%20Effects&logoColor=white">
-<img alt="Adobe Premiere Pro" src="https://img.shields.io/badge/Adobe%20Premiere%20Pro-9999FF.svg?style=for-the-badge&logo=Adobe%20Premiere%20Pro&logoColor=white">
-<img alt="Blender" src="https://img.shields.io/badge/blender-%23F5792A.svg?style=for-the-badge&logo=blender&logoColor=white">
-<img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white">
 <img alt="HTML" src="https://img.shields.io/badge/HTML-f06529?style=for-the-badge&logo=html5&logoColor=white">
-<img alt="CSS" src="https://img.shields.io/badge/css-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white">
-<img alt="JavaScript" src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E">
+<img alt="CSS" src="https://img.shields.io/badge/css-%231572B6.svg?style=for-the-badge&logo=css&logoColor=white">
 <img alt="NodeJS" src="https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white">
-<img alt="Canva" src="https://img.shields.io/badge/Canva-%2300C4CC.svg?style=for-the-badge&logo=Canva&logoColor=white">
-<img alt="Gimp Gnu Image Manipulation Program" src="https://img.shields.io/badge/Gimp-657D8B?style=for-the-badge&logo=gimp&logoColor=FFFFFF">
-<img alt="Adobe Photoshop" src="https://img.shields.io/badge/adobephotoshop-%2331A8FF.svg?style=for-the-badge&logo=adobephotoshop&logoColor=white">
+<img alt="JavaScript" src="https://img.shields.io/badge/Javascript-yellow?style=for-the-badge&logo=JavaScript&logoColor=black&color=ffc71e">
+<img alt="TypeScript" src="https://img.shields.io/badge/Typescript-%231572B6.svg?style=for-the-badge&&logo=typescript&logoColor=white">
+<img alt="Bun" src="https://img.shields.io/badge/Bun-gray?style=for-the-badge&logo=bun">
+<img alt="Kotlin" src="https://img.shields.io/badge/Kotlin-purple?style=for-the-badge&logo=Kotlin&logoColor=white">
 </div>
   
 <p align=center> ⋇ ⋆✦⋆ ⋇  <br>
