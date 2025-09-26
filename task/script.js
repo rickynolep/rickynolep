@@ -191,7 +191,7 @@ function renderTasks() {
     card.innerHTML = `
       <div class="card-header">
         <div class="category-group">
-          <span class="category">${categoryFull}</span><br>
+          <span class="category">${categoryFull}</span>
           <span class="time">Jam ke ${time}</span>
         </div>
         <div class="deadline-group">
