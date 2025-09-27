@@ -5,6 +5,7 @@ let tasks = [];                 // akan diisi dari CSV
 let hasAnimatedCards = false;   // animasi kartu hanya saat load pertama
 
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRCvNsf3gz_RXNFc4vGAb6C5Lv4OYDZSan2dNcRvbvg3rODjCqG1LpklElMMXvRcNTkOP68v_NW81KD/pub?output=csv';
+const JADWAL_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRCvNsf3gz_RXNFc4vGAb6C5Lv4OYDZSan2dNcRvbvg3rODjCqG1LpklElMMXvRcNTkOP68v_NW81KD/pub?gid=0&output=csv'; // ganti gid sesuai sheet jadwal
 
 function parseCSV(csv) {
   const lines = csv.trim().split(/\r?\n/);
@@ -181,9 +182,32 @@ const categoryMap = {
   "KKA": "KKA","PAS": "Projek IPAS","PJK": "PJOK","MTK": "Matematika","PKN": "PKN","SJH": "Sejarah","SEN": "Seni Budaya"
 };
 
+// Ubah timeMap agar sesuai dengan tabel baru (jam pelajaran per hari)
 const timeMap = {
-  "AGH": "4-6","BID": "8-10","BEN": "7-8","BBL": "9-10","DTM1": "4-7","DTM2": "5-6","DTP": "1-6",
-  "INF": "7-10","KKA": "7-8","PAS": "1-5","PJK": "1-3","MTK": "1-3","PKN": "7-8","SJH": "9-10","SEN": "9-10"
+  // Senin
+  "PJK": "1-3",
+  "AGH": "4-6",
+  "PKN": "7-8",
+  "SJH": "9-10",
+  // Selasa
+  "MTK": "1-3",
+  "DTM1": "4-7",
+  "BID": "8-10",
+  // Rabu
+  "PAS": "1-6",
+  "BEN": "7-8",
+  "BBL": "9-10",
+  // Kamis
+  "DTP": "1-6",
+  "KKA": "7-8",
+  "SEN": "9-10",
+  // Jumat
+  "KKL": "1-4",
+  "DTM2": "5-6",
+  "INF": "7-10",
+  // Break
+  "break1": "-",
+  "break2": "-"
 };
 
 // ===================
@@ -326,28 +350,142 @@ window.addEventListener('resize', updateFooterShadow);
 // Button
 // ===================
 document.addEventListener('DOMContentLoaded', function() {
-    var pill = document.getElementById('pill');
-    var pillTrigger = document.getElementById('pill-trigger');
-    var pillClose = document.getElementById('pill-close');
-    pillTrigger.addEventListener('click', function() {
-        pill.classList.add('is-expanded');
-        pill.setAttribute('aria-expanded', 'true');
-        renderJadwalTable();
-        document.body.style.overflow = 'hidden';
-    });
+  const pill = document.getElementById('pill');
+  const pillClose = document.getElementById('pill-close');
 
-    pillClose.addEventListener('click', function() {
-        pill.classList.remove('is-expanded');
-        pill.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
-    });
+  const COOLDOWN_MS = 500;
+  let cooldownTimer = null;
 
-    // Optional: tutup dengan ESC
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && pill.classList.contains('is-expanded')) {
-            pill.classList.remove('is-expanded');
-            pill.setAttribute('aria-expanded', 'false');
-            document.body.style.overflow = '';
-        }
-    });
+  function startCooldown() {
+    pill.classList.add('is-cooldown');
+    clearTimeout(cooldownTimer);
+    cooldownTimer = setTimeout(() => {
+      pill.classList.remove('is-cooldown');
+    }, COOLDOWN_MS);
+  }
+
+  function openPill() {
+    if (pill.classList.contains('is-cooldown')) return;
+    if (pill.classList.contains('is-expanded')) return;
+    pill.classList.add('is-expanded');
+    pill.setAttribute('aria-expanded', 'true');
+    renderJadwalTable?.();
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePill() {
+    if (!pill.classList.contains('is-expanded')) return;
+    pill.classList.remove('is-expanded');
+    pill.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    startCooldown();
+  }
+
+  pill.addEventListener('click', (e) => {
+    if (e.target.closest('.pillcontent') || e.target.closest('#pill-close')) return;
+    openPill();
+  });
+
+  pillClose.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closePill();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && pill.classList.contains('is-expanded')) {
+      closePill();
+    }
+  });
 });
+
+async function fetchJadwalPelajaran() {
+  try {
+    const res = await fetch(`${JADWAL_CSV_URL}&t=${Date.now()}`);
+    if (!res.ok) throw new Error('Gagal fetch jadwal');
+    const csv = await res.text();
+    return parseCSV(csv); // gunakan parseCSV yang sudah ada
+  } catch (e) {
+    console.error('Gagal muat jadwal pelajaran', e);
+    return [];
+  }
+}
+
+// ===================
+// Render Lesson Schedule
+// ===================
+async function renderLessonSchedule() {
+  const scheduleContainer = document.getElementById('jadwal-table');
+  scheduleContainer.innerHTML = `<h2 class="jadwal-title">Jadwal Pelajaran</h2><div class="jadwal-loading">Loading...</div>`;
+
+  const jadwalRows = await fetchJadwalPelajaran();
+
+  function mapCategory(cat) {
+    return categoryMap[cat] || (cat?.toLowerCase().includes('break') ? cat : cat || '-');
+  }
+
+  function renderKiri() {
+    return `
+      <div class="jadwal-table-group kiri">
+        <table>
+          <thead>
+            <tr>
+              <th>Jam</th>
+              <th>Waktu</th>
+              <th>Senin</th>
+              <th>Selasa</th>
+              <th>Rabu</th>
+              <th>Kamis</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${jadwalRows.map(row => `
+              <tr>
+                <td>${row.num1 || '-'}</td>
+                <td>${row.time1 || '-'}</td>
+                <td>${mapCategory(row.senin)}</td>
+                <td>${mapCategory(row.selasa)}</td>
+                <td>${mapCategory(row.rabu)}</td>
+                <td>${mapCategory(row.kamis)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  function renderKanan() {
+    return `
+      <div class="jadwal-table-group kanan">
+        <table>
+          <thead>
+            <tr>
+              <th>Jam</th>
+              <th>Waktu</th>
+              <th>Jumat</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${jadwalRows.map(row => `
+              <tr>
+                <td>${row.num2 || '-'}</td>
+                <td>${row.time2 || '-'}</td>
+                <td>${mapCategory(row.jumat)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  scheduleContainer.innerHTML = `
+    <h1 class="jadwal-title">Jadwal Pelajaran</h1>
+    <div class="jadwal-tables-wrapper force-side">
+      ${renderKiri()}
+      ${renderKanan()}
+    </div>
+  `;
+}
+
+renderLessonSchedule();
