@@ -1,29 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <title>Ricky's Task List</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- SEO/Open Graph -->
   <meta property="og:title" content="Ricky Developer" />
   <meta property="og:description" content="An autodidact developer & editor who love kemonomimi" />
   <meta property="og:image" content="https://ricky.is-a.dev/assets/lb.png" />
-  <meta property="og:type" content="content_website" />
+  <meta property="og:type" content="website" />
   <meta property="og:url" content="https://ricky.is-a.dev/" />
   <link rel="icon" type="image/png" href="https://ricky.is-a.dev/assets/lb.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Questrial&family=Unbounded:wght@200..900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h1>Daftar Tugas</h1>
-  <p>Ketuk tugas untuk menandainya sebagai selesai</p>
-  <div id="last-updated" style="font-size:0.9rem;color:#ffffff;text-align:center;margin-bottom:10px;"></div>
+  <h1>Daftar Tugas X TKJ 1</h1>
+
+  <!-- Status: crossfade antara loading dan teks -->
+  <div id="status" class="status">
+    <!-- Layer 1: Loading (awal terlihat) -->
+    <div id="loading-layer" class="status-layer is-visible" aria-live="polite" aria-atomic="true">
+      <div id="loading" class="loading" style="color:white;"></div>
+      <div id="load-text" class="load-text"><br> Loading...</div>
+    </div>
+
+    <!-- Layer 2: Teks status (akan fade-in) -->
+    <div id="text-layer" class="status-layer" aria-live="polite" aria-atomic="true">
+      <div id="disclaimer" class="status-text" style="font-size: 1rem; text-align: center; margin-bottom: -20px;"></div>
+      <div id="info" class="status-text info" style="font-size: 0.8rem; text-align: center; color: #8d8d8d;"></div>
+    </div>
+  </div>
+
+  <!-- Kontainer kartu -->
   <div class="card-container" id="task-container"></div>
-  <div id="footer-sentinel" aria-hidden="true"></div>
-  <div id="loading" class="loading" style="color: white;"></div>
-  <div id="load-text" class="load-text"><br><br>Loading...</div>
+
+  <!-- Pill: slide-up + expand -->
+  <div id="pill" class="pill" aria-expanded="false" aria-controls="pillcontent">
+    <div class="iconholder" id="pill-trigger">
+      <p style="font-size: 0.8rem;">Jadwal Pelajaran</p>
+    </div>
+    <div id="pillcontent" class="pillcontent" role="group" aria-label="Menu Jadwal">
+      <!-- Isi jadwal akan diisi JS -->
+      <button id="pill-close" class="pill-close" aria-label="Tutup Jadwal">Tutup</button>
+      <div id="jadwal-table"></div>
+    </div>
+  </div>
+
+  <!-- Footer: last updated -->
   <footer class="footer" id="footer">
-    <div class="footer-inner">Data diupdate Ricky, jadi tolong ingetin kalo lupa. Mwehhweh..</be></div>
+    <span id="footer-last-updated"></span>
   </footer>
 
   <script src="script.js"></script>
