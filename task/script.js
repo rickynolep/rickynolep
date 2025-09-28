@@ -100,13 +100,17 @@ async function loadTasksFromCSV() {
       }
     }
 
-    // Map data
-    tasks = rows.filter(r => r.title).map(r => ({
-      id: r.id || crypto.randomUUID(),
-      category: r.category || '',
-      title: r.title || '',
-      deadlineDate: r.deadlineDate || ''
-    }));
+    // Map data + hidden filter
+    tasks = rows
+      .filter(r => r.title)
+      .map(r => ({
+        id: r.id || crypto.randomUUID(),
+        category: r.category || '',
+        title: r.title || '',
+        deadlineDate: r.deadlineDate || '',
+        hidden: normalizeHidden(r.hidden) // kolom "hidden" dari CSV
+      }))
+      .filter(t => !t.hidden); // hanya tampilkan yang hidden = false (0)
 
     // Render kartu (awal: .is-hidden jika pertama)
     renderTasks();
@@ -140,6 +144,8 @@ async function loadTasksFromCSV() {
     const textLayer = document.getElementById('text-layer');
     loadingLayer?.classList.remove('is-visible');
     textLayer?.classList.add('is-visible');
+    const footerEl = document.getElementById('footer');
+    const pill = document.getElementById('pill');
     if (footerEl) footerEl.classList.add('is-visible');
     if (pill) pill.classList.add('is-visible');
   }
@@ -273,6 +279,15 @@ function setFooterLastUpdated(raw) {
   const el = document.getElementById('footer-last-updated'); if (!el) return;
   const d = parseDDMMYYYY_HHmmss(raw); if (!d) return;
   el.textContent = `Last Updated: ${formatLastUpdated(d)}`;
+}
+
+// ===================
+// Hidden flag helper
+// ===================
+function normalizeHidden(v) {
+  const s = String(v ?? '0').trim().toLowerCase();
+  // true kalau 1/true/yes, selain itu dianggap false (tampil)
+  return s === '1' || s === 'true' || s === 'yes';
 }
 
 // ===================
