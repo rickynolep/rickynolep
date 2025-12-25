@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Minimalist Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes softFloat {
+            0%, 100% { transform: translateY(0px) rotate(var(--base-rotate)); }
+            50% { transform: translateY(-8px) rotate(var(--base-rotate)); }
+        }
+
+        .gallery-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            width: 100%;
+            overflow: hidden;
+            padding: 1rem 0;
+            z-index: 10;
+            margin-top: 5rem;
+        }
+
+        .scroll-row {
+            display: flex;
+            width: max-content;
+            padding-bottom: 15px;
+            will-change: transform;
+        }
+
+        .floating-item {
+            flex: 0 0 185px; 
+            cursor: pointer;
+            transition: 
+                transform 1.2s cubic-bezier(0.2, 1, 0.3, 1), 
+                filter 0.5s ease,
+                opacity 0.6s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            will-change: transform, opacity;
+            position: relative;
+        }
+
+        .floating-item:nth-child(odd) { 
+            --base-rotate: -2.5deg;
+            margin-top: 8px; 
+            animation: softFloat 5s ease-in-out infinite;
+        }
+        .floating-item:nth-child(even) { 
+            --base-rotate: 2.5deg;
+            margin-top: -8px; 
+            animation: softFloat 6s ease-in-out infinite;
+        }
+
+        .floating-item:not(.focused-clone):hover {
+            transform: scale(1.1) rotate(0deg) translateY(-12px);
+            z-index: 100;
+            filter: brightness(1.1);
+        }
+
+        .img-container {
+            width: 88%;
+            aspect-ratio: 1 / 1;
+            background-color: white; 
+            overflow: hidden;
+            border-radius: 0.6rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+        }
+
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            display: block;
+        }
+
+        #main-header {
+            position: fixed;
+            top: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            text-align: center;
+            z-index: 3000;
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            pointer-events: none;
+        }
+
+        #main-header.focused {
+            top: 78%;
+            transform: translateX(-50%) scale(0.85);
+        }
+
+        #dynamic-subtitle {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 0.2rem;
+        }
+
+        #target-text {
+            display: block;
+            min-height: 1.2em;
+            font-size: 1.2rem;
+            font-weight: 800;
+            transition: all 0.4s ease;
+            color: #4ade80;
+            opacity: 0;
+        }
+
+        #requester-text {
+            display: block;
+            font-size: 0.85rem;
+            color: #94a3b8; 
+            opacity: 0;
+            transition: all 0.6s ease;
+        }
+
+        #main-header.focused #target-text {
+            font-size: 2.4rem;
+            color: #ffffff;
+            opacity: 1 !important;
+            text-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        .focused-clone {
+            position: fixed !important;
+            z-index: 2500 !important;
+            pointer-events: auto;
+            animation: none !important;
+            margin: 0 !important;
+            filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 1)) !important;
+            transition: 
+                top 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+                left 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+                transform 0.9s cubic-bezier(0.1, 0.9, 0.2, 1), 
+                opacity 0.6s ease !important;
+        }
+
+        #overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(15, 23, 42, 0.98) 0%, rgba(4, 6, 14, 1) 100%);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+            z-index: 2000;
+        }
+
+        #overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .snow-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 min-h-screen flex flex-col justify-center items-center overflow-hidden text-white font-sans">
+
+    <div class="snow-bg"></div>
+
+    <header id="main-header">
+        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tighter text-red-500 uppercase italic drop-shadow-[0_4px_12px_rgba(239,68,68,0.5)]">
+            Merry Christmas!
+        </h1>
+        <div id="dynamic-subtitle">
+            <span class="text-sm text-slate-400 font-medium">All I want for Christmas is...</span>
+            <span id="target-text"></span>
+            <span id="requester-text"></span>
+        </div>
+    </header>
+
+    <div id="overlay"></div>
+
+    <div class="gallery-wrapper" id="scroll-container">
+        <div class="scroll-row" id="row1"></div>
+        <div class="scroll-row" id="row2"></div>
+        <div class="scroll-row" id="row3"></div>
+    </div>
+
+    <script>
+        const christmasWishes = [
+            { id: 1, name: "Kyaru", image: "https://pbs.twimg.com/profile_images/1995841491940638722/CxZ42mJ3_400x400.jpg", requester: "Ricky" },
+            { id: 2, name: "Uma", image: "https://i.redd.it/padoru-v0-8gj6fqqc2m3c1.jpg?width=1280&format=pjpg&auto=webp&s=6e9e35fbe007818de61d769bb6453501ad3cdb93", requester: "Sultan"},
+            { id: 3, name: "Elaina", image: "https://i.pinimg.com/736x/8c/16/14/8c16143fcfdd99e635b9384ab79853c8.jpg", requester: "Yazid" },
+            { id: 4, name: "Cartethyia", image: "https://preview.redd.it/padoru-padoru-v0-8phwiilfq49g1.jpeg?width=1080&crop=smart&auto=webp&s=36dc569e6bd7a97bdcfa3af71f3e84e347346819", requester: "Joshua" },
+            { id: 5, name: "Tsukasa", image: "https://i.redd.it/yxo6uqdgip3c1.png", requester: "Alan" },
+            { id: 6, name: "Okayu", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO7EZh9l97ICtJnNnCe089ratbHu1ezIP16A&s", requester: "Xyndrome" },
+            { id: 7, name: "Yuuka", image: "https://pbs.twimg.com/media/FF67E3hUUAMy-yX.jpg", requester: "Bayu" },
+            { id: 8, name: "Tairitsu", image: "https://pbs.twimg.com/media/Gd3_7BHbwAEqR0a.jpg", requester: "Sharga/Noone" },
+            { id: 9, name: "Furina", image: "https://preview.redd.it/saw-someone-on-this-sub-asking-for-a-padoru-furina-so-i-v0-joj3db7mkuxb1.png?width=850&format=png&auto=webp&s=fb8ad458bc0632bb62048b40e7ff45b6ec3f18d8", requester: "Dimas" },
+            { id: 10, name: "Shorekeeper", image: "https://pbs.twimg.com/media/Gbr5idua0AEaLV0.jpg", requester: "Andika" },
+            { id: 11, name: "Akeno", image: "https://i.redd.it/bxegcijn9nb51.jpg", requester: "Vaidic" },
+            { id: 12, name: "Futaba", image: "https://i.pinimg.com/564x/4b/79/67/4b7967f54515aa13dddccdcb7730e598.jpg", requester: "Bluecube64bit" },
+            { id: 12, name: "Miyabi", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGGGnx3mf5YVqslv7cbaCFENIs7v5phqdTaQ&s", requester: "Akashi" },
+            
+        ];
+
+        function shuffleArray(array) {
+            const newArr = [...array];
+            for (let i = newArr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+            }
+            return newArr;
+        }
+
+        function createItem(itemData) {
+            const div = document.createElement('div');
+            div.className = 'floating-item';
+            div.setAttribute('data-name', itemData.name);
+            div.setAttribute('data-requester', itemData.requester);
+            div.setAttribute('data-id', itemData.id);
+            div.innerHTML = `<div class="img-container"><img src="${itemData.image}" alt="${itemData.name}"></div>`;
+            return div;
+        }
+
+        const shuffledPool = shuffleArray(christmasWishes);
+        const splitIndex = Math.floor(shuffledPool.length / 3);
+        
+        const rowsData = [
+            shuffledPool.slice(0, splitIndex),
+            shuffledPool.slice(splitIndex, splitIndex * 2),
+            shuffledPool.slice(splitIndex * 2)
+        ];
+
+        const rows = [
+            { el: document.getElementById('row1'), pos: 0, speed: 0.75, baseWidth: 0 },
+            { el: document.getElementById('row2'), pos: 0, speed: 0.75, baseWidth: 0 },
+            { el: document.getElementById('row3'), pos: 0, speed: 0.75, baseWidth: 0 }
+        ];
+
+        // Inisialisasi item
+        rows.forEach((rowObj, idx) => {
+            const myItems = rowsData[idx];
+            // Gunakan 4 duplikasi per baris (Blok A, B, C, D) untuk keamanan ekstra
+            const repeatedItems = [...myItems, ...myItems, ...myItems, ...myItems];
+
+            repeatedItems.forEach((data) => {
+                rowObj.el.appendChild(createItem(data));
+            });
+            
+            // Tunggu render untuk menghitung lebar dasar (baseWidth) dari 1 set item unik
+            setTimeout(() => {
+                rowObj.baseWidth = (rowObj.el.scrollWidth / 4);
+                // Set posisi awal di blok kedua agar bisa di-scroll ke dua arah tanpa kosong
+                rowObj.pos = -rowObj.baseWidth;
+            }, 0);
+        });
+
+        let scrollDelta = 0;
+        let isFocused = false;
+        let currentFocusFactor = 1.0; 
+
+        function updatePositions() {
+            const targetFocusFactor = isFocused ? 0 : 1;
+            currentFocusFactor += (targetFocusFactor - currentFocusFactor) * 0.05;
+
+            if (currentFocusFactor > 0.001) {
+                rows.forEach(row => {
+                    if (row.baseWidth === 0) return;
+
+                    // Update posisi berdasarkan speed dan scroll
+                    row.pos -= (row.speed + (scrollDelta * 0.08)) * currentFocusFactor;
+                    
+                    /** * LOGIKA INFINITE LOOP:
+                     * Jika posisi melewati batas blok dasar (baseWidth), 
+                     * kita kembalikan ke rentang blok tengah secara instan.
+                     */
+                    if (row.pos <= -(row.baseWidth * 2)) {
+                        row.pos += row.baseWidth;
+                    } else if (row.pos >= 0) {
+                        row.pos -= row.baseWidth;
+                    }
+                    
+                    row.el.style.transform = `translateX(${row.pos}px)`;
+                });
+            }
+            
+            scrollDelta *= 0.94;
+            requestAnimationFrame(updatePositions);
+        }
+
+        window.addEventListener('wheel', (e) => {
+            if (!isFocused) scrollDelta += e.deltaY * 0.4;
+        }, { passive: true });
+
+        updatePositions();
+
+        const overlay = document.getElementById('overlay');
+        const mainHeader = document.getElementById('main-header');
+        const targetText = document.getElementById('target-text');
+        const requesterText = document.getElementById('requester-text');
+        let activeClone = null;
+        let originalElement = null;
+
+        document.addEventListener('mouseover', (e) => {
+            const item = e.target.closest('.floating-item');
+            if (item && !isFocused) {
+                const name = item.getAttribute('data-name');
+                targetText.innerText = name;
+                targetText.style.opacity = '1';
+            }
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            const item = e.target.closest('.floating-item');
+            if (item && !isFocused) {
+                targetText.style.opacity = '0';
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            const item = e.target.closest('.floating-item');
+            if (item && !isFocused) {
+                isFocused = true; 
+                const name = item.getAttribute('data-name');
+                const requester = item.getAttribute('data-requester');
+                const rect = item.getBoundingClientRect();
+                
+                originalElement = item;
+                activeClone = item.cloneNode(true);
+                activeClone.classList.add('focused-clone');
+                originalElement.style.opacity = '0';
+                originalElement.style.pointerEvents = 'none';
+
+                activeClone.style.transition = 'none';
+                activeClone.style.top = rect.top + 'px';
+                activeClone.style.left = rect.left + 'px';
+                activeClone.style.width = rect.width + 'px';
+                activeClone.style.height = rect.height + 'px';
+                
+                document.body.appendChild(activeClone);
+                
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        activeClone.style.transition = ''; 
+                        activeClone.style.top = '40%'; 
+                        activeClone.style.left = '50%';
+                        activeClone.style.transform = 'translate(-50%, -50%) scale(1.9) rotate(0deg)';
+                        overlay.classList.add('active');
+                        mainHeader.classList.add('focused');
+                        targetText.innerText = name;
+                        targetText.style.opacity = '1';
+                        requesterText.innerText = `(Waifunya ${requester})`;
+                        requesterText.style.opacity = '1';
+                    }, 50);
+                });
+
+                activeClone.onclick = closeImage;
+            }
+        });
+
+        function closeImage() {
+            if (activeClone) {
+                overlay.classList.remove('active');
+                mainHeader.classList.remove('focused');
+                activeClone.style.transform = 'translate(-50%, -50%) scale(0) rotate(-10deg)';
+                activeClone.style.opacity = '0';
+                
+                setTimeout(() => {
+                    if (activeClone) {
+                        activeClone.remove();
+                        activeClone = null;
+                        if (originalElement) {
+                            originalElement.style.opacity = '1';
+                            originalElement.style.pointerEvents = 'auto';
+                            originalElement = null;
+                        }
+                        targetText.innerText = "";
+                        targetText.style.opacity = '0';
+                        requesterText.innerText = "";
+                        requesterText.style.opacity = '0';
+                        isFocused = false; 
+                    }
+                }, 900);
+            }
+        }
+
+        overlay.addEventListener('click', closeImage);
+        window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeImage(); });
+    </script>
+</body>
+</html>
