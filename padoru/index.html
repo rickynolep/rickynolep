@@ -3,12 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Christmas Minimalist Gallery</title>
+    <title>The Padoru Gallery</title>
+    <!-- Import Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&family=Unbounded:wght@400&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* Animasi melayang lembut */
         @keyframes softFloat {
-            0%, 100% { transform: translateY(0px) rotate(var(--base-rotate)); }
-            50% { transform: translateY(-8px) rotate(var(--base-rotate)); }
+            0%, 100% { transform: translateY(0px) rotate(var(--tilt)); }
+            50% { transform: translateY(-12px) rotate(var(--tilt)); }
+        }
+
+        @keyframes grad-right {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        @keyframes fade-in-up {
+            0% { opacity: 0; transform: translateY(60px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes header-drop {
+            0% { opacity: 0; transform: translate(-50%, -20px); }
+            100% { opacity: 1; transform: translate(-50%, 0); }
+        }
+
+        body {
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            background-color: #020617;
+            margin: 0;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            font-family: 'Questrial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .gallery-wrapper {
@@ -17,56 +50,83 @@
             gap: 1.5rem;
             width: 100%;
             overflow: hidden;
-            padding: 1rem 0;
+            padding: 4rem 0; 
             z-index: 10;
-            margin-top: 5rem;
+            margin-top: clamp(130px, 20vh, 10rem);
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease, filter 0.8s ease;
+            animation-delay: 0.3s;
+        }
+
+        .gallery-wrapper.minimized {
+            filter: blur(10px) grayscale(0.5); /* Efek blur agar fokus ke modal */
+            pointer-events: none;
+        }
+
+        /* Khusus layar kecil, dorong lebih jauh */
+        @media (max-width: 768px) {
+            .gallery-wrapper {
+                margin-top: 160px;
+                gap: 1rem;
+            }
+            /* Kecilin dikit itemnya biar muat banyak */
+            .floating-item {
+                flex: 0 0 140px !important;
+            }
+            .img-container {
+                width: 120px !important;
+                height: 120px !important;
+            }
         }
 
         .scroll-row {
             display: flex;
             width: max-content;
-            padding-bottom: 15px;
+            padding-bottom: 20px; 
             will-change: transform;
         }
 
         .floating-item {
             flex: 0 0 185px; 
+            margin: 0 10px;
             cursor: pointer;
-            transition: 
-                transform 1.2s cubic-bezier(0.2, 1, 0.3, 1), 
-                filter 0.5s ease,
-                opacity 0.6s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
-            will-change: transform, opacity;
+            will-change: transform;
             position: relative;
+            transform-origin: center center;
         }
 
-        .floating-item:nth-child(odd) { 
-            --base-rotate: -2.5deg;
-            margin-top: 8px; 
+        .item-inner {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             animation: softFloat 5s ease-in-out infinite;
-        }
-        .floating-item:nth-child(even) { 
-            --base-rotate: 2.5deg;
-            margin-top: -8px; 
-            animation: softFloat 6s ease-in-out infinite;
+            will-change: transform;
         }
 
-        .floating-item:not(.focused-clone):hover {
-            transform: scale(1.1) rotate(0deg) translateY(-12px);
-            z-index: 100;
-            filter: brightness(1.1);
+        .floating-item:hover .item-inner {
+            animation-play-state: paused;
+            transform: scale(1.15) rotate(var(--tilt)); 
+            transition: transform 0.4s ease-out;
+            z-index: 50;
         }
 
         .img-container {
-            width: 88%;
-            aspect-ratio: 1 / 1;
+            width: 120px;
+            height: 120px;
             background-color: white; 
             overflow: hidden;
-            border-radius: 0.6rem;
+            border-radius: 1rem;
             box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .floating-item:hover .img-container {
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.7), 0 0 80px rgba(197, 80, 252, 0.4);
+            border-color: #ffffff;
         }
 
         .img-container img {
@@ -74,11 +134,25 @@
             height: 100%;
             object-fit: cover; 
             display: block;
+            pointer-events: none;
+        }
+
+        .grad-head {
+            z-index: 10;
+            color: transparent;
+            background-image: linear-gradient(to right, #3b80ff, #c550fc, #3b80ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            background-size: 200% 200%;
+            animation: grad-right 7.5s linear infinite;
+            display: inline-block;
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 400;
         }
 
         #main-header {
             position: fixed;
-            top: 1.5rem;
+            top: 2.5rem;
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
@@ -86,58 +160,86 @@
             z-index: 3000;
             transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
             pointer-events: none;
+            animation: header-drop 1.2s cubic-bezier(0.23, 1, 0.32, 1) both;
         }
 
         #main-header.focused {
-            top: 78%;
-            transform: translateX(-50%) scale(0.85);
-        }
-
-        #dynamic-subtitle {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin-top: 0.2rem;
+            top: 70%; 
+            transform: translateX(-50%) scale(0.7);
         }
 
         #target-text {
             display: block;
             min-height: 1.2em;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: 800;
-            transition: all 0.4s ease;
             color: #4ade80;
             opacity: 0;
+            transform: translateY(5px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            font-family: 'Questrial', sans-serif;
+        }
+
+        #target-text.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         #requester-text {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #94a3b8; 
             opacity: 0;
-            transition: all 0.6s ease;
+            transform: translateY(10px);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            font-family: 'Questrial', sans-serif;
         }
 
         #main-header.focused #target-text {
-            font-size: 2.4rem;
+            font-size: 2.5rem;
             color: #ffffff;
             opacity: 1 !important;
-            text-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        #main-header.focused #requester-text {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .focused-clone {
             position: fixed !important;
             z-index: 2500 !important;
-            pointer-events: auto;
-            animation: none !important;
+            pointer-events: auto; 
             margin: 0 !important;
-            filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 1)) !important;
-            transition: 
-                top 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),
-                left 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),
-                transform 0.9s cubic-bezier(0.1, 0.9, 0.2, 1), 
-                opacity 0.6s ease !important;
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            cursor: pointer;
+            transform-origin: center center;
+        }
+        
+        .focused-clone .item-inner {
+            animation: none !important;
+        }
+
+        /* Teks Download */
+        #download-hint {
+            position: fixed;
+            top: 62%; 
+            left: 50%;
+            transform: translate(-50%, -10px); 
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2400; 
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            font-family: 'Unbounded', sans-serif;
+            text-transform: uppercase;
+        }
+
+        #download-hint.visible {
+            opacity: 1;
+            transform: translate(-50%, 0);
         }
 
         #overlay {
@@ -146,39 +248,32 @@
             background: radial-gradient(circle, rgba(15, 23, 42, 0.98) 0%, rgba(4, 6, 14, 1) 100%);
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.8s ease;
+            transition: opacity 0.7s ease;
             z-index: 2000;
+            cursor: pointer; 
         }
 
         #overlay.active {
-            opacity: 1;
+            opacity: 0.996;
             pointer-events: auto;
-        }
-
-        .snow-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 1;
         }
     </style>
 </head>
-<body class="bg-slate-950 min-h-screen flex flex-col justify-center items-center overflow-hidden text-white font-sans">
-
-    <div class="snow-bg"></div>
+<body class="bg-slate-950 min-h-screen text-white">
 
     <header id="main-header">
-        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tighter text-red-500 uppercase italic drop-shadow-[0_4px_12px_rgba(239,68,68,0.5)]">
+        <h1 class="grad-head text-3xl md:text-5xl tracking-tighter uppercase">
             Merry Christmas!
         </h1>
-        <div id="dynamic-subtitle">
-            <span class="text-sm text-slate-400 font-medium">All I want for Christmas is...</span>
+        <div id="dynamic-subtitle" class="flex flex-col items-center mt-2">
+            <span id="intro-text" class="text-xs md:text-sm text-slate-400 font-medium tracking-widest">All I want for Christmas is...</span>
             <span id="target-text"></span>
             <span id="requester-text"></span>
         </div>
     </header>
 
     <div id="overlay"></div>
+    <div id="download-hint">Click to download</div>
 
     <div class="gallery-wrapper" id="scroll-container">
         <div class="scroll-row" id="row1"></div>
@@ -190,7 +285,7 @@
         const christmasWishes = [
             { id: 1, name: "Kyaru", image: "https://pbs.twimg.com/profile_images/1995841491940638722/CxZ42mJ3_400x400.jpg", requester: "Ricky" },
             { id: 2, name: "Uma", image: "https://i.redd.it/padoru-v0-8gj6fqqc2m3c1.jpg?width=1280&format=pjpg&auto=webp&s=6e9e35fbe007818de61d769bb6453501ad3cdb93", requester: "Sultan"},
-            { id: 3, name: "Elaina", image: "https://i.pinimg.com/736x/8c/16/14/8c16143fcfdd99e635b9384ab79853c8.jpg", requester: "Yazid" },
+            { id: 3, name: "Elaina", image: "https://i.redd.it/ivgapffmzex51.png", requester: "Yazid" },
             { id: 4, name: "Cartethyia", image: "https://preview.redd.it/padoru-padoru-v0-8phwiilfq49g1.jpeg?width=1080&crop=smart&auto=webp&s=36dc569e6bd7a97bdcfa3af71f3e84e347346819", requester: "Joshua" },
             { id: 5, name: "Tsukasa", image: "https://i.redd.it/yxo6uqdgip3c1.png", requester: "Alan" },
             { id: 6, name: "Okayu", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO7EZh9l97ICtJnNnCe089ratbHu1ezIP16A&s", requester: "Xyndrome" },
@@ -199,194 +294,247 @@
             { id: 9, name: "Furina", image: "https://preview.redd.it/saw-someone-on-this-sub-asking-for-a-padoru-furina-so-i-v0-joj3db7mkuxb1.png?width=850&format=png&auto=webp&s=fb8ad458bc0632bb62048b40e7ff45b6ec3f18d8", requester: "Dimas" },
             { id: 10, name: "Shorekeeper", image: "https://pbs.twimg.com/media/Gbr5idua0AEaLV0.jpg", requester: "Andika" },
             { id: 11, name: "Akeno", image: "https://i.redd.it/bxegcijn9nb51.jpg", requester: "Vaidic" },
-            { id: 12, name: "Futaba", image: "https://i.pinimg.com/564x/4b/79/67/4b7967f54515aa13dddccdcb7730e598.jpg", requester: "Bluecube64bit" },
+            { id: 12, name: "Futaba", image: "https://preview.redd.it/saifgikv4v621.jpg?width=640&crop=smart&auto=webp&s=4e99e73f7eeb74b744d401179fcedbc66def6173", requester: "Bluecube64bit" },
             { id: 12, name: "Miyabi", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGGGnx3mf5YVqslv7cbaCFENIs7v5phqdTaQ&s", requester: "Akashi" },
-            
-        ];
-
-        function shuffleArray(array) {
-            const newArr = [...array];
-            for (let i = newArr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
-            }
-            return newArr;
-        }
-
-        function createItem(itemData) {
-            const div = document.createElement('div');
-            div.className = 'floating-item';
-            div.setAttribute('data-name', itemData.name);
-            div.setAttribute('data-requester', itemData.requester);
-            div.setAttribute('data-id', itemData.id);
-            div.innerHTML = `<div class="img-container"><img src="${itemData.image}" alt="${itemData.name}"></div>`;
-            return div;
-        }
-
-        const shuffledPool = shuffleArray(christmasWishes);
-        const splitIndex = Math.floor(shuffledPool.length / 3);
-        
-        const rowsData = [
-            shuffledPool.slice(0, splitIndex),
-            shuffledPool.slice(splitIndex, splitIndex * 2),
-            shuffledPool.slice(splitIndex * 2)
         ];
 
         const rows = [
-            { el: document.getElementById('row1'), pos: 0, speed: 0.75, baseWidth: 0 },
-            { el: document.getElementById('row2'), pos: 0, speed: 0.75, baseWidth: 0 },
-            { el: document.getElementById('row3'), pos: 0, speed: 0.75, baseWidth: 0 }
+            { el: document.getElementById('row1'), pos: 0, baseSpeed: 1.0 },
+            { el: document.getElementById('row2'), pos: 0, baseSpeed: 0.8 },
+            { el: document.getElementById('row3'), pos: 0, baseSpeed: 1.2 }
         ];
 
-        // Inisialisasi item
-        rows.forEach((rowObj, idx) => {
-            const myItems = rowsData[idx];
-            // Gunakan 4 duplikasi per baris (Blok A, B, C, D) untuk keamanan ekstra
-            const repeatedItems = [...myItems, ...myItems, ...myItems, ...myItems];
-
-            repeatedItems.forEach((data) => {
-                rowObj.el.appendChild(createItem(data));
-            });
-            
-            // Tunggu render untuk menghitung lebar dasar (baseWidth) dari 1 set item unik
-            setTimeout(() => {
-                rowObj.baseWidth = (rowObj.el.scrollWidth / 4);
-                // Set posisi awal di blok kedua agar bisa di-scroll ke dua arah tanpa kosong
-                rowObj.pos = -rowObj.baseWidth;
-            }, 0);
-        });
-
-        let scrollDelta = 0;
+        let baseWidths = [0, 0, 0];
         let isFocused = false;
-        let currentFocusFactor = 1.0; 
+        let isAnimating = false; 
+        let globalTimeFactor = 1.0; 
+        let targetTimeFactor = 1.0;
+        let savedTransform = ''; // Variabel untuk menyimpan posisi tilt terakhir
+
+        function createItem(data, indexInPool) {
+            const div = document.createElement('div');
+            div.className = 'floating-item';
+            div.setAttribute('data-name', data.name);
+            div.setAttribute('data-requester', data.requester);
+            div.setAttribute('data-img', data.image);
+            
+            const tiltValue = indexInPool % 2 === 0 ? '3deg' : '-3deg';
+            const marginTop = indexInPool % 2 === 0 ? '-10px' : '10px';
+            const duration = (4 + (indexInPool % 3)).toFixed(1) + 's'; 
+            
+            div.innerHTML = `
+                <div class="item-inner" style="--tilt: ${tiltValue}; animation-duration: ${duration}; margin-top: ${marginTop}">
+                    <div class="img-container">
+                        <img src="${data.image}" alt="${data.name}" crossorigin="anonymous">
+                    </div>
+                </div>
+            `;
+            return div;
+        }
+
+        function setupRows() {
+            rows.forEach((row, idx) => {
+                row.el.innerHTML = '';
+                const pool = [...christmasWishes].sort(() => Math.random() - 0.5);
+                for(let i = 0; i < 3; i++) {
+                    pool.forEach((item, pIdx) => {
+                        row.el.appendChild(createItem(item, pIdx));
+                    });
+                }
+            });
+            requestAnimationFrame(() => {
+                rows.forEach((row, idx) => {
+                    baseWidths[idx] = row.el.scrollWidth / 3;
+                    row.pos = -baseWidths[idx];
+                });
+            });
+        }
 
         function updatePositions() {
-            const targetFocusFactor = isFocused ? 0 : 1;
-            currentFocusFactor += (targetFocusFactor - currentFocusFactor) * 0.05;
-
-            if (currentFocusFactor > 0.001) {
-                rows.forEach(row => {
-                    if (row.baseWidth === 0) return;
-
-                    // Update posisi berdasarkan speed dan scroll
-                    row.pos -= (row.speed + (scrollDelta * 0.08)) * currentFocusFactor;
-                    
-                    /** * LOGIKA INFINITE LOOP:
-                     * Jika posisi melewati batas blok dasar (baseWidth), 
-                     * kita kembalikan ke rentang blok tengah secara instan.
-                     */
-                    if (row.pos <= -(row.baseWidth * 2)) {
-                        row.pos += row.baseWidth;
-                    } else if (row.pos >= 0) {
-                        row.pos -= row.baseWidth;
-                    }
-                    
-                    row.el.style.transform = `translateX(${row.pos}px)`;
-                });
-            }
-            
-            scrollDelta *= 0.94;
+            globalTimeFactor += (targetTimeFactor - globalTimeFactor) * 0.05;
+            rows.forEach((row, idx) => {
+                const bw = baseWidths[idx];
+                if (!bw) return;
+                const currentMovement = row.baseSpeed * globalTimeFactor;
+                row.pos -= currentMovement;
+                
+                if (row.pos <= -(bw * 2)) row.pos += bw;
+                else if (row.pos >= 0) row.pos -= bw;
+                
+                row.el.style.transform = `translate3d(${row.pos}px, 0, 0)`;
+            });
             requestAnimationFrame(updatePositions);
         }
 
-        window.addEventListener('wheel', (e) => {
-            if (!isFocused) scrollDelta += e.deltaY * 0.4;
-        }, { passive: true });
-
+        setupRows();
         updatePositions();
+
+        window.addEventListener('resize', setupRows);
 
         const overlay = document.getElementById('overlay');
         const mainHeader = document.getElementById('main-header');
         const targetText = document.getElementById('target-text');
         const requesterText = document.getElementById('requester-text');
+        const downloadHint = document.getElementById('download-hint');
         let activeClone = null;
         let originalElement = null;
+        let downloadTimeout = null;
 
-        document.addEventListener('mouseover', (e) => {
+        document.getElementById('scroll-container').addEventListener('mouseover', (e) => {
+            if (isFocused) return;
             const item = e.target.closest('.floating-item');
-            if (item && !isFocused) {
+            if (item) {
                 const name = item.getAttribute('data-name');
                 targetText.innerText = name;
-                targetText.style.opacity = '1';
+                targetText.classList.add('visible');
             }
         });
 
-        document.addEventListener('mouseout', (e) => {
+        document.getElementById('scroll-container').addEventListener('mouseout', (e) => {
+            if (isFocused) return;
             const item = e.target.closest('.floating-item');
-            if (item && !isFocused) {
-                targetText.style.opacity = '0';
+            if (item) {
+                targetText.classList.remove('visible');
             }
         });
 
         document.addEventListener('click', (e) => {
             const item = e.target.closest('.floating-item');
-            if (item && !isFocused) {
-                isFocused = true; 
-                const name = item.getAttribute('data-name');
-                const requester = item.getAttribute('data-requester');
-                const rect = item.getBoundingClientRect();
+            if (item && !isFocused && !isAnimating) {
+                isFocused = true;
+                isAnimating = true; 
+                targetTimeFactor = 0.0; 
                 
                 originalElement = item;
+                const inner = item.querySelector('.item-inner');
+                
+                
+                // 1. BEKUKAN ANIMASI ELEMEN ASLI
+                // Kita ambil computed style saat ini, lalu pause animasinya.
+                // Elemen asli akan "stuck" di posisi/miring yang sama persis saat diklik.
+                const computedStyle = window.getComputedStyle(inner);
+                savedTransform = computedStyle.transform; // Simpan matrix transform (rotate+translate)
+                inner.style.animationPlayState = 'paused'; 
+                
+                const rect = item.getBoundingClientRect();
+                
+                // Buat Clone
                 activeClone = item.cloneNode(true);
                 activeClone.classList.add('focused-clone');
                 originalElement.style.opacity = '0';
-                originalElement.style.pointerEvents = 'none';
 
+                // Setup Posisi Awal Clone (Sama persis dengan elemen asli yang sudah beku)
                 activeClone.style.transition = 'none';
                 activeClone.style.top = rect.top + 'px';
                 activeClone.style.left = rect.left + 'px';
                 activeClone.style.width = rect.width + 'px';
-                activeClone.style.height = rect.height + 'px';
+                activeClone.style.transform = 'translate(0, 0) scale(1)';
                 
+                const cloneInner = activeClone.querySelector('.item-inner');
+                cloneInner.style.transform = savedTransform; // Terapkan transform beku tadi
+                cloneInner.style.transition = 'none';
+                cloneInner.style.animation = 'none'; // Clone tidak perlu animasi softFloat
+
                 document.body.appendChild(activeClone);
-                
+                document.querySelector('.gallery-wrapper').classList.add('minimized');
+                activeClone.offsetHeight; 
+
+                // Start Expand Animation
                 requestAnimationFrame(() => {
-                    setTimeout(() => {
-                        activeClone.style.transition = ''; 
-                        activeClone.style.top = '40%'; 
-                        activeClone.style.left = '50%';
-                        activeClone.style.transform = 'translate(-50%, -50%) scale(1.9) rotate(0deg)';
-                        overlay.classList.add('active');
-                        mainHeader.classList.add('focused');
-                        targetText.innerText = name;
-                        targetText.style.opacity = '1';
-                        requesterText.innerText = `(Waifunya ${requester})`;
-                        requesterText.style.opacity = '1';
-                    }, 50);
+                    activeClone.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)'; 
+                    activeClone.style.top = '50%';
+                    activeClone.style.left = '50%';
+                    activeClone.style.transform = 'translate(-50%, -100%) scale(2.0)';
+                    
+                    cloneInner.style.transition = 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    cloneInner.style.transform = 'rotate(0deg)'; // Luruskan saat diperbesar
+
+                    overlay.classList.add('active');
+                    mainHeader.classList.add('focused');
+                    
+                    targetText.innerText = item.getAttribute('data-name');
+                    targetText.classList.add('visible');
+                    requesterText.innerText = `(Waifunya ${item.getAttribute('data-requester')})`;
+                    
+                    if(downloadTimeout) clearTimeout(downloadTimeout);
+                    downloadTimeout = setTimeout(() => {
+                        downloadHint.classList.add('visible');
+                        isAnimating = false; 
+                    }, 800);
                 });
 
-                activeClone.onclick = closeImage;
+                activeClone.onclick = (evt) => {
+                    evt.stopPropagation();
+                    const imgUrl = item.getAttribute('data-img');
+                    const fileName = `Padoru-${item.getAttribute('data-name')}.jpg`;
+                    handleDownload(imgUrl, fileName);
+                };
             }
         });
 
-        function closeImage() {
-            if (activeClone) {
-                overlay.classList.remove('active');
-                mainHeader.classList.remove('focused');
-                activeClone.style.transform = 'translate(-50%, -50%) scale(0) rotate(-10deg)';
-                activeClone.style.opacity = '0';
+        async function handleDownload(url, filename) {
+            try {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
                 
-                setTimeout(() => {
-                    if (activeClone) {
-                        activeClone.remove();
-                        activeClone = null;
-                        if (originalElement) {
-                            originalElement.style.opacity = '1';
-                            originalElement.style.pointerEvents = 'auto';
-                            originalElement = null;
-                        }
-                        targetText.innerText = "";
-                        targetText.style.opacity = '0';
-                        requesterText.innerText = "";
-                        requesterText.style.opacity = '0';
-                        isFocused = false; 
-                    }
-                }, 900);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(blobUrl);
+            } catch (error) {
+                window.open(url, '_blank');
             }
         }
 
+        function closeImage() {
+            if (!activeClone || isAnimating) return; 
+            isAnimating = true;
+
+            overlay.classList.remove('active');
+            mainHeader.classList.remove('focused');
+            downloadHint.classList.remove('visible');
+            document.querySelector('.gallery-wrapper').classList.remove('minimized');
+            if(downloadTimeout) clearTimeout(downloadTimeout);
+            
+            // Ambil posisi TERKINI dari elemen asli (karena mungkin scroll bergeser dikit sebelum berhenti)
+            const rect = originalElement.getBoundingClientRect();
+            
+            // Animasi Wrapper: Kembali ke koordinat asli
+            activeClone.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            activeClone.style.transform = 'translate(0, 0) scale(1)'; 
+            activeClone.style.top = rect.top + 'px';
+            activeClone.style.left = rect.left + 'px';
+            activeClone.style.width = rect.width + 'px';
+            
+            // Animasi Inner: KEMBALI KE POSISI BEKU (Saved Transform)
+            // Ini kuncinya agar tidak ada "jump" rotasi/translate saat mendarat
+            const cloneInner = activeClone.querySelector('.item-inner');
+            cloneInner.style.transition = 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            cloneInner.style.transform = savedTransform; 
+            
+            setTimeout(() => {
+                if (activeClone) activeClone.remove();
+                if (originalElement) {
+                    originalElement.style.opacity = '1';
+                    // JANGAN lupa jalankan lagi animasinya
+                    originalElement.querySelector('.item-inner').style.animationPlayState = 'running';
+                }
+                
+                activeClone = null;
+                originalElement = null;
+                
+                targetText.classList.remove('visible');
+                isFocused = false;
+                targetTimeFactor = 1.0; 
+                isAnimating = false;
+            }, 800); 
+        }
+
         overlay.addEventListener('click', closeImage);
-        window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeImage(); });
     </script>
 </body>
 </html>
