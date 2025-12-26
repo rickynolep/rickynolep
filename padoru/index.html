@@ -19,11 +19,6 @@
             100% { background-position: 200% 50%; }
         }
 
-        @keyframes fade-in-up {
-            0% { opacity: 0; transform: translateY(60px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
         @keyframes header-drop {
             0% { opacity: 0; transform: translate(-50%, -20px); }
             100% { opacity: 1; transform: translate(-50%, 0); }
@@ -54,34 +49,22 @@
             z-index: 10;
             margin-top: clamp(130px, 20vh, 10rem);
             transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease, filter 0.8s ease;
-            animation-delay: 0.3s;
         }
 
         .gallery-wrapper.minimized {
-            filter: blur(10px) grayscale(0.5); /* Efek blur agar fokus ke modal */
+            filter: blur(15px) brightness(0.3);
             pointer-events: none;
         }
 
-        /* Khusus layar kecil, dorong lebih jauh */
         @media (max-width: 768px) {
-            .gallery-wrapper {
-                margin-top: 160px;
-                gap: 1rem;
-            }
-            /* Kecilin dikit itemnya biar muat banyak */
-            .floating-item {
-                flex: 0 0 140px !important;
-            }
-            .img-container {
-                width: 120px !important;
-                height: 120px !important;
-            }
+            .gallery-wrapper { margin-top: 160px; gap: 1rem; }
+            .floating-item { flex: 0 0 140px !important; }
+            .img-container { width: 120px !important; height: 120px !important; }
         }
 
         .scroll-row {
             display: flex;
             width: max-content;
-            padding-bottom: auto; 
             will-change: transform;
         }
 
@@ -94,7 +77,6 @@
             align-items: center;
             will-change: transform;
             position: relative;
-            transform-origin: center center;
         }
 
         .item-inner {
@@ -164,7 +146,7 @@
         }
 
         #main-header.focused {
-            top: 70%; 
+            top: 72%; 
             transform: translateX(-50%) scale(0.7);
         }
 
@@ -177,13 +159,9 @@
             opacity: 0;
             transform: translateY(5px);
             transition: opacity 0.3s ease, transform 0.3s ease;
-            font-family: 'Questrial', sans-serif;
         }
 
-        #target-text.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        #target-text.visible { opacity: 1; transform: translateY(0); }
 
         #requester-text {
             display: block;
@@ -192,11 +170,10 @@
             opacity: 0;
             transform: translateY(10px);
             transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            font-family: 'Questrial', sans-serif;
         }
 
         #main-header.focused #target-text {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             color: #ffffff;
             opacity: 1 !important;
         }
@@ -213,22 +190,18 @@
             margin: 0 !important;
             transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); 
             cursor: pointer;
-            transform-origin: center center;
         }
         
-        .focused-clone .item-inner {
-            animation: none !important;
-        }
+        .focused-clone .item-inner { animation: none !important; }
 
-        /* Teks Download */
         #download-hint {
             position: fixed;
-            top: 62%; 
+            top: 64%; 
             left: 50%;
-            transform: translate(-50%, -10px); 
+            transform: translate(-50%, -15px); 
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.7rem;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             opacity: 0;
             pointer-events: none;
             z-index: 2400; 
@@ -245,7 +218,7 @@
         #overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, rgba(15, 23, 42, 0.98) 0%, rgba(4, 6, 14, 1) 100%);
+            background: radial-gradient(circle, rgba(15, 23, 42, 0.9) 0%, rgba(2, 6, 23, 1) 100%);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.7s ease;
@@ -253,18 +226,13 @@
             cursor: pointer; 
         }
 
-        #overlay.active {
-            opacity: 0.996;
-            pointer-events: auto;
-        }
+        #overlay.active { opacity: 1; pointer-events: auto; }
     </style>
 </head>
 <body class="bg-slate-950 min-h-screen text-white">
 
     <header id="main-header">
-        <h1 class="grad-head text-3xl md:text-5xl tracking-tighter uppercase">
-            Merry Christmas!
-        </h1>
+        <h1 class="grad-head text-3xl md:text-5xl tracking-tighter uppercase">Merry Christmas!</h1>
         <div id="dynamic-subtitle" class="flex flex-col items-center mt-2">
             <span id="intro-text" class="text-xs md:text-sm text-slate-400 font-medium tracking-widest">All I want for Christmas is...</span>
             <span id="target-text"></span>
@@ -273,7 +241,7 @@
     </header>
 
     <div id="overlay"></div>
-    <div id="download-hint">Click to download</div>
+    <div id="download-hint">Klik untuk mengunduh</div>
 
     <div class="gallery-wrapper" id="scroll-container">
         <div class="scroll-row" id="row1"></div>
@@ -282,50 +250,68 @@
     </div>
 
     <script>
-        const christmasWishes = [
-            { id: 1, name: "Kyaru", image: "https://pbs.twimg.com/profile_images/1995841491940638722/CxZ42mJ3_400x400.jpg", requester: "Ricky" },
-            { id: 2, name: "Goldship", image: "https://files.catbox.moe/7h8n65.jpeg", requester: "Sultan"},
+        // Data lengkap 15 Karakter
+        const pool = [
+            { id: 1, name: "Kyaru Momochi", image: "https://pbs.twimg.com/profile_images/1995841491940638722/CxZ42mJ3_400x400.jpg", requester: "Ricky" },
+            { id: 2, name: "Gold Ship", image: "https://files.catbox.moe/7h8n65.jpeg", requester: "Sultan"},
             { id: 3, name: "Elaina", image: "https://files.catbox.moe/azn4wq.jpg", requester: "Yazid" },
             { id: 4, name: "Cartethyia / Fleurdelys", image: "https://files.catbox.moe/vcyb5o.jpeg", requester: "Joshua" },
-            { id: 5, name: "Tsukasa", image: "https://files.catbox.moe/a9ivi3.jpg", requester: "Alan" },
-            { id: 6, name: "Okayu", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO7EZh9l97ICtJnNnCe089ratbHu1ezIP16A&s", requester: "Xyndrome" },
-            { id: 7, name: "Yuuka", image: "https://pbs.twimg.com/media/FF67E3hUUAMy-yX.jpg", requester: "Bayu" },
+            { id: 5, name: "Tsukasa Yuzaki", image: "https://files.catbox.moe/urucyv.png", requester: "Alan" },
+            { id: 6, name: "Nekomata Okayu", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO7EZh9l97ICtJnNnCe089ratbHu1ezIP16A&s", requester: "Xyndrome" },
+            { id: 7, name: "Hayase Yuuka", image: "https://pbs.twimg.com/media/FF67E3hUUAMy-yX.jpg", requester: "Bayu" },
             { id: 8, name: "Tairitsu", image: "https://pbs.twimg.com/media/Gd3_7BHbwAEqR0a.jpg", requester: "Sharga/Noone" },
             { id: 9, name: "Furina", image: "https://files.catbox.moe/a9ivi3.jpg", requester: "Dimas" },
             { id: 10, name: "Shorekeeper", image: "https://pbs.twimg.com/media/Gbr5idua0AEaLV0.jpg", requester: "Andika" },
-            { id: 11, name: "Akeno", image: "https://files.catbox.moe/qokkah.png", requester: "Vaidic" },
+            { id: 11, name: "Akeno Himejima", image: "https://files.catbox.moe/qokkah.png", requester: "Vaidic" },
             { id: 12, name: "Rio Futaba", image: "https://files.catbox.moe/1fz4xo.jpg", requester: "Bluecube64bit" },
-            { id: 13, name: "Miyabi", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGGGnx3mf5YVqslv7cbaCFENIs7v5phqdTaQ&s", requester: "Akashi" },
+            { id: 13, name: "Hoshimi Miyabi", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGGGnx3mf5YVqslv7cbaCFENIs7v5phqdTaQ&s", requester: "Akashi" },
             { id: 14, name: "Rei Ayanami", image: "https://files.catbox.moe/tk638q.png", requester: "Arden" },
-            { id: 15, name: "Zelda", image: "https://files.catbox.moe/wl9lg4.jpeg", requester: "Aurora" },
+            { id: 15, name: "Zelda", image: "https://files.catbox.moe/wl9lg4.jpeg", requester: "Aurora" }
         ];
 
-        const rows = [
-            { el: document.getElementById('row1'), pos: 3, baseSpeed: 1 },
-            { el: document.getElementById('row2'), pos: 0, baseSpeed: 1.1 },
-            { el: document.getElementById('row3'), pos: 5, baseSpeed: 1.2 }
+        const rowsData = [
+            { 
+                el: document.getElementById('row1'), 
+                items: pool.filter(item => item.id % 3 === 1),
+                pos: 0, 
+                speed: 0.95
+            },
+            { 
+                el: document.getElementById('row2'), 
+                items: pool.filter(item => item.id % 3 === 2),
+                pos: 0, 
+                speed: 1
+            },
+            { 
+                el: document.getElementById('row3'), 
+                items: pool.filter(item => item.id % 3 === 0),
+                pos: 0, 
+                speed: 1.05 
+            }
         ];
 
         let baseWidths = [0, 0, 0];
         let isFocused = false;
-        let isAnimating = false; 
-        let globalTimeFactor = 1.0; 
+        let isAnimating = false;
+        let globalTimeFactor = 1.0;
         let targetTimeFactor = 1.0;
-        let savedTransform = ''; // Variabel untuk menyimpan posisi tilt terakhir
+        let savedTransform = '';
+        let activeClone = null;
+        let originalElement = null;
 
-        function createItem(data, indexInPool) {
+        function createItem(data, uniqueIdx) {
             const div = document.createElement('div');
             div.className = 'floating-item';
             div.setAttribute('data-name', data.name);
             div.setAttribute('data-requester', data.requester);
             div.setAttribute('data-img', data.image);
             
-            const tiltValue = indexInPool % 2 === 0 ? '3deg' : '-3deg';
-            const marginTop = indexInPool % 2 === 0 ? '-10px' : '10px';
-            const duration = (4 + (indexInPool % 3)).toFixed(1) + 's'; 
+            // Variasi rotasi dan margin agar tidak terlalu kaku
+            const tiltValue = uniqueIdx % 2 === 0 ? '4deg' : '-4deg';
+            const marginTop = uniqueIdx % 2 === 0 ? '-15px' : '15px';
             
             div.innerHTML = `
-                <div class="item-inner" style="--tilt: ${tiltValue}; animation-duration: ${duration}; margin-top: ${marginTop}">
+                <div class="item-inner" style="--tilt: ${tiltValue}; margin-top: ${marginTop}">
                     <div class="img-container">
                         <img src="${data.image}" alt="${data.name}" crossorigin="anonymous">
                     </div>
@@ -335,18 +321,19 @@
         }
 
         function setupRows() {
-            rows.forEach((row, idx) => {
+            rowsData.forEach((row, rIdx) => {
                 row.el.innerHTML = '';
-                const pool = [...christmasWishes].sort(() => Math.random() - 0.5);
-                for(let i = 0; i < 3; i++) {
-                    pool.forEach((item, pIdx) => {
-                        row.el.appendChild(createItem(item, pIdx));
+                // Looping 4x agar scroll terlihat tanpa batas (infinite)
+                for(let i = 0; i < 4; i++) {
+                    row.items.forEach((data, idx) => {
+                        row.el.appendChild(createItem(data, idx + (i * 10)));
                     });
                 }
             });
             requestAnimationFrame(() => {
-                rows.forEach((row, idx) => {
-                    baseWidths[idx] = row.el.scrollWidth / 3;
+                rowsData.forEach((row, idx) => {
+                    // Lebar dasar untuk satu set item (sebelum looping)
+                    baseWidths[idx] = row.el.scrollWidth / 4;
                     row.pos = -baseWidths[idx];
                 });
             });
@@ -354,14 +341,14 @@
 
         function updatePositions() {
             globalTimeFactor += (targetTimeFactor - globalTimeFactor) * 0.05;
-            rows.forEach((row, idx) => {
+            rowsData.forEach((row, idx) => {
                 const bw = baseWidths[idx];
                 if (!bw) return;
-                const currentMovement = row.baseSpeed * globalTimeFactor;
-                row.pos -= currentMovement;
                 
+                row.pos -= row.speed * globalTimeFactor;
+                
+                // Reset posisi ke awal jika sudah melewati satu siklus
                 if (row.pos <= -(bw * 2)) row.pos += bw;
-                else if (row.pos >= 0) row.pos -= bw;
                 
                 row.el.style.transform = `translate3d(${row.pos}px, 0, 0)`;
             });
@@ -370,7 +357,6 @@
 
         setupRows();
         updatePositions();
-
         window.addEventListener('resize', setupRows);
 
         const overlay = document.getElementById('overlay');
@@ -378,108 +364,91 @@
         const targetText = document.getElementById('target-text');
         const requesterText = document.getElementById('requester-text');
         const downloadHint = document.getElementById('download-hint');
-        let activeClone = null;
-        let originalElement = null;
-        let downloadTimeout = null;
 
         document.getElementById('scroll-container').addEventListener('mouseover', (e) => {
             if (isFocused) return;
             const item = e.target.closest('.floating-item');
             if (item) {
-                const name = item.getAttribute('data-name');
-                targetText.innerText = name;
+                targetText.innerText = item.getAttribute('data-name');
                 targetText.classList.add('visible');
             }
         });
 
-        document.getElementById('scroll-container').addEventListener('mouseout', (e) => {
+        document.getElementById('scroll-container').addEventListener('mouseout', () => {
             if (isFocused) return;
-            const item = e.target.closest('.floating-item');
-            if (item) {
-                targetText.classList.remove('visible');
-            }
+            targetText.classList.remove('visible');
         });
 
         document.addEventListener('click', (e) => {
             const item = e.target.closest('.floating-item');
             if (item && !isFocused && !isAnimating) {
-                isFocused = true;
-                isAnimating = true; 
-                targetTimeFactor = 0.0; 
-                
-                originalElement = item;
-                const inner = item.querySelector('.item-inner');
-                
-                
-                // 1. BEKUKAN ANIMASI ELEMEN ASLI
-                // Kita ambil computed style saat ini, lalu pause animasinya.
-                // Elemen asli akan "stuck" di posisi/miring yang sama persis saat diklik.
-                const computedStyle = window.getComputedStyle(inner);
-                savedTransform = computedStyle.transform; // Simpan matrix transform (rotate+translate)
-                inner.style.animationPlayState = 'paused'; 
-                
-                const rect = item.getBoundingClientRect();
-                
-                // Buat Clone
-                activeClone = item.cloneNode(true);
-                activeClone.classList.add('focused-clone');
-                originalElement.style.opacity = '0';
-
-                // Setup Posisi Awal Clone (Sama persis dengan elemen asli yang sudah beku)
-                activeClone.style.transition = 'none';
-                activeClone.style.top = rect.top + 'px';
-                activeClone.style.left = rect.left + 'px';
-                activeClone.style.width = rect.width + 'px';
-                activeClone.style.transform = 'translate(0, 0) scale(1)';
-                
-                const cloneInner = activeClone.querySelector('.item-inner');
-                cloneInner.style.transform = savedTransform;
-                cloneInner.style.transition = 'none';
-                cloneInner.style.animation = 'none';
-
-                document.body.appendChild(activeClone);
-                document.querySelector('.gallery-wrapper').classList.add('minimized');
-                activeClone.offsetHeight; 
-
-                // Start Expand Animation
-                requestAnimationFrame(() => {
-                    activeClone.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)'; 
-                    activeClone.style.top = '50%';
-                    activeClone.style.left = '50%';
-                    activeClone.style.transform = 'translate(-50%, -100%) scale(2.0)';
-                    
-                    cloneInner.style.transition = 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                    cloneInner.style.transform = 'rotate(0deg)';
-
-                    overlay.classList.add('active');
-                    mainHeader.classList.add('focused');
-                    
-                    targetText.innerText = item.getAttribute('data-name');
-                    targetText.classList.add('visible');
-                    requesterText.innerText = `(Waifu ${item.getAttribute('data-requester')})`;
-                    
-                    if(downloadTimeout) clearTimeout(downloadTimeout);
-                    downloadTimeout = setTimeout(() => {
-                        downloadHint.classList.add('visible');
-                        isAnimating = false; 
-                    }, 800);
-                });
-
-                activeClone.onclick = (evt) => {
-                    evt.stopPropagation();
-                    const imgUrl = item.getAttribute('data-img');
-                    const fileName = `Padoru-${item.getAttribute('data-name')}.jpg`;
-                    handleDownload(imgUrl, fileName);
-                };
+                openItem(item);
             }
         });
+
+        function openItem(item) {
+            isFocused = true;
+            isAnimating = true;
+            targetTimeFactor = 0.0;
+            originalElement = item;
+
+            const inner = item.querySelector('.item-inner');
+            const computedStyle = window.getComputedStyle(inner);
+            savedTransform = computedStyle.transform;
+            inner.style.animationPlayState = 'paused';
+
+            const rect = item.getBoundingClientRect();
+            activeClone = item.cloneNode(true);
+            activeClone.classList.add('focused-clone');
+            originalElement.style.opacity = '0';
+
+            activeClone.style.transition = 'none';
+            activeClone.style.top = rect.top + 'px';
+            activeClone.style.left = rect.left + 'px';
+            activeClone.style.width = rect.width + 'px';
+            activeClone.style.transform = 'translate(0, 0) scale(1)';
+
+            const cloneInner = activeClone.querySelector('.item-inner');
+            cloneInner.style.transform = savedTransform;
+            cloneInner.style.animation = 'none';
+
+            document.body.appendChild(activeClone);
+            document.querySelector('.gallery-wrapper').classList.add('minimized');
+            activeClone.offsetHeight;
+
+            requestAnimationFrame(() => {
+                activeClone.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                activeClone.style.top = '50%';
+                activeClone.style.left = '50%';
+                activeClone.style.transform = 'translate(-50%, -100%) scale(2.2)';
+                
+                cloneInner.style.transition = 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                cloneInner.style.transform = 'rotate(0deg)';
+
+                overlay.classList.add('active');
+                mainHeader.classList.add('focused');
+                
+                targetText.innerText = item.getAttribute('data-name');
+                targetText.classList.add('visible');
+                requesterText.innerText = `(Waifu ${item.getAttribute('data-requester')})`;
+
+                setTimeout(() => {
+                    downloadHint.classList.add('visible');
+                    isAnimating = false;
+                }, 800);
+            });
+
+            activeClone.onclick = (evt) => {
+                evt.stopPropagation();
+                handleDownload(item.getAttribute('data-img'), `Padoru-${item.getAttribute('data-name')}.jpg`);
+            };
+        }
 
         async function handleDownload(url, filename) {
             try {
                 const response = await fetch(url);
                 const blob = await response.blob();
                 const blobUrl = URL.createObjectURL(blob);
-                
                 const link = document.createElement('a');
                 link.href = blobUrl;
                 link.download = filename;
@@ -487,53 +456,39 @@
                 link.click();
                 document.body.removeChild(link);
                 URL.revokeObjectURL(blobUrl);
-            } catch (error) {
-                window.open(url, '_blank');
-            }
+            } catch (e) { window.open(url, '_blank'); }
         }
 
         function closeImage() {
-            if (!activeClone || isAnimating) return; 
+            if (!activeClone || isAnimating) return;
             isAnimating = true;
 
             overlay.classList.remove('active');
             mainHeader.classList.remove('focused');
             downloadHint.classList.remove('visible');
             document.querySelector('.gallery-wrapper').classList.remove('minimized');
-            if(downloadTimeout) clearTimeout(downloadTimeout);
-            
-            // Ambil posisi TERKINI dari elemen asli (karena mungkin scroll bergeser dikit sebelum berhenti)
+
             const rect = originalElement.getBoundingClientRect();
-            
-            // Animasi Wrapper: Kembali ke koordinat asli
             activeClone.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
-            activeClone.style.transform = 'translate(0, 0) scale(1)'; 
             activeClone.style.top = rect.top + 'px';
             activeClone.style.left = rect.left + 'px';
-            activeClone.style.width = rect.width + 'px';
-            
-            // Animasi Inner: KEMBALI KE POSISI BEKU (Saved Transform)
-            // Ini kuncinya agar tidak ada "jump" rotasi/translate saat mendarat
+            activeClone.style.transform = 'translate(0, 0) scale(1)';
+
             const cloneInner = activeClone.querySelector('.item-inner');
             cloneInner.style.transition = 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
-            cloneInner.style.transform = savedTransform; 
-            
+            cloneInner.style.transform = savedTransform;
+
             setTimeout(() => {
                 if (activeClone) activeClone.remove();
                 if (originalElement) {
                     originalElement.style.opacity = '1';
-                    // JANGAN lupa jalankan lagi animasinya
                     originalElement.querySelector('.item-inner').style.animationPlayState = 'running';
                 }
-                
-                activeClone = null;
-                originalElement = null;
-                
-                targetText.classList.remove('visible');
                 isFocused = false;
-                targetTimeFactor = 1.0; 
+                targetTimeFactor = 1.0;
                 isAnimating = false;
-            }, 800); 
+                targetText.classList.remove('visible');
+            }, 800);
         }
 
         overlay.addEventListener('click', closeImage);
