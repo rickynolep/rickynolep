@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Task Scheduler</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        .container { max-width: 300px; }
+        ul { list-style: none; padding: 0; }
+        li { background: #f4f4f4; margin: 5px 0; padding: 8px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Tugas Saya</h2>
+        <input type="text" id="taskInput" placeholder="Ketik tugas baru...">
+        <button onclick="tambahTugas()">+</button>
+
+        <div class="taskList">
+            <!-- Disini bakalan muncul task barunya -->
+        </div>
+
+    </div>
+
+    <script>
+
+        function tambahTugas() {
+            const input = document.getElementById("taskInput");
+            const taskValue = input.value;
+
+            if (taskValue === "") return; // Jangan simpan kalau kosong
+
+            // 2. Ambil data lama, tambah data baru, lalu simpan kembali
+            let tasks = JSON.parse(localStorage.getItem("myTasks")) || [];
+            tasks.push(taskValue);
+            localStorage.setItem("myTasks", JSON.stringify(tasks));
+
+            input.value = ""; // Kosongkan input setelah klik
+            tampilkanTugas(); // Update tampilan
+        }
+
+
+    </script>
+
+</body>
+</html>

@@ -123,6 +123,32 @@ h1 {
     display: flex;
 }
 
+/* Utility page: center the list and make task buttons same size */
+.centered-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.taskbutton, .selftaskbutton {
+    width: 200px;
+    height: 30px;
+    background-color: #596cec;
+    border-radius: 20px;
+    border: 1px solid #ffffff1a;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.taskbutton:hover, .selftaskbutton:hover {
+    background-color: #6a7bee;
+}
+
 .discordpill {
     display: none;
     opacity: 0;
