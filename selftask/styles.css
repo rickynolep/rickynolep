@@ -413,3 +413,167 @@ h1 {
 .jadwal-tables-wrapper.force-side::-webkit-scrollbar-track {
   background: #232323;
 }
+
+/* Task Modal */
+.task-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  padding: 16px;
+}
+
+.task-modal-overlay.is-visible {
+  opacity: 1;
+}
+
+.task-modal-overlay.fade-out {
+  opacity: 0;
+}
+
+.task-modal {
+  background: #282828;
+  border-radius: 16px;
+  border: 1px solid #444;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.4);
+  max-width: 420px;
+  width: 100%;
+  color: #eee;
+  overflow: hidden;
+  transform: scale(0.95);
+  transition: transform 200ms ease;
+  animation: modalSlideIn 200ms ease forwards;
+}
+
+.task-modal-overlay.is-visible .task-modal {
+  transform: scale(1);
+}
+
+@keyframes modalSlideIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.task-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px 24px;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.task-modal-title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 500;
+  font-family: "Questrial", sans-serif;
+  color: #eee;
+  text-align: left;
+  flex: 1;
+  word-break: break-word;
+}
+
+.task-modal-close {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 1.6rem;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 200ms ease;
+  flex-shrink: 0;
+}
+
+.task-modal-close:hover {
+  color: #eee;
+}
+
+.task-modal-body {
+  padding: 20px 24px;
+}
+
+.task-modal-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task-modal-category {
+  font-size: 0.95rem;
+  color: #43a9f9;
+  font-weight: 500;
+}
+
+.task-modal-deadline {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.task-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 24px 20px 24px;
+}
+
+.task-modal-btn {
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 200ms ease;
+  text-align: center;
+}
+
+.task-modal-btn-complete {
+  background: #43a9f9;
+  color: #000;
+}
+
+.task-modal-btn-complete:hover {
+  background: #5ab8ff;
+  transform: translateY(-2px);
+}
+
+.task-modal-btn-delete {
+  background: #ff5c5c;
+  color: #fff;
+}
+
+.task-modal-btn-delete:hover {
+  background: #ff7575;
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .task-modal-overlay,
+  .task-modal {
+    transition: none;
+    animation: none;
+  }
+  
+  .task-modal {
+    transform: scale(1);
+  }
+}

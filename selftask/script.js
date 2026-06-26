@@ -1,11 +1,24 @@
 // ===================
-// Sumber data dari CSV publish-to-web
+// Sumber data dari localStorage
 // ===================
-let tasks = [];                 // akan diisi dari CSV
+let tasks = [];                 // akan diisi dari localStorage
 let hasAnimatedCards = false;   // animasi kartu hanya saat load pertama
 
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRCvNsf3gz_RXNFc4vGAb6C5Lv4OYDZSan2dNcRvbvg3rODjCqG1LpklElMMXvRcNTkOP68v_NW81KD/pub?output=csv';
-const JADWAL_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRCvNsf3gz_RXNFc4vGAb6C5Lv4OYDZSan2dNcRvbvg3rODjCqG1LpklElMMXvRcNTkOP68v_NW81KD/pub?gid=0&output=csv'; // ganti gid sesuai sheet jadwal
+// Motivational messages untuk empty state
+const emptyStateMessages = [
+  "Kerjakan tugasnya yaaa!",
+  "Tugasnya ga bakalan selesai sendiri loh!",
+  "Jangan males-malesan dong!",
+  "Saatnya produktif nih!",
+  "Tunjukin keseriusanmu!",
+  "Buruan selesaiin tugasnya!",
+  "Nggak ada tugas? Buat yang baru aja!",
+  "Ayo semangat ngerjain!"
+];
+
+function getRandomEmptyMessage() {
+  return emptyStateMessages[Math.floor(Math.random() * emptyStateMessages.length)];
+}
 
 function parseCSV(csv) {
   const lines = csv.trim().split(/\r?\n/);
@@ -73,7 +86,18 @@ async function crossfadeStatus() {
   await Promise.all([waitTransition(loadingLayer), waitTransition(textLayer)]);
 }
 
-async function loadTasksFromCSV() {
+// Helper: load tasks dari localStorage
+function loadTasksFromStorage() {
+  const stored = localStorage.getItem('allTasks');
+  return stored ? JSON.parse(stored) : [];
+}
+
+// Helper: save tasks ke localStorage
+function saveTasksToStorage(tasksList) {
+  localStorage.setItem('allTasks', JSON.stringify(tasksList));
+}
+
+async function loadTasksFromStorage_UI() {
   const disclaimer = document.getElementById('disclaimer');
   const info = document.getElementById('info');
   const footerLU = document.getElementById('footer-last-updated');
@@ -82,35 +106,30 @@ async function loadTasksFromCSV() {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   try {
-    const url = `${CSV_URL}&t=${Date.now()}`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('Fetch gagal');
+    // Fake loading 2 detik
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
-    const csv = await res.text();
-    const rows = parseCSV(csv);
-
-    // Last updated dari Sheet (kolom header "lastUpdated")
-    const luRaw = (rows.find(r => r.lastUpdated && r.lastUpdated.trim()) || {}).lastUpdated || '';
-    if (luRaw && footerLU) {
-      const luDate = parseDDMMYYYY_HHmmss(luRaw);
-      if (luDate && !Number.isNaN(luDate.getTime())) {
-        footerLU.textContent = `Last Updated: ${formatLastUpdated(luDate)}`;
-        if (disclaimer) disclaimer.textContent = "Data diupdate oleh Ricky, jadi tolong ingetin kalo lupa. Mwehhweh..";
-        if (info) info.textContent = "Ketuk tugas untuk menandainya sebagai selesai";
-      }
+    // Load dari localStorage
+    tasks = loadTasksFromStorage();
+    
+    if (!tasks.length) {
+      // Default empty state dengan random message
+      if (disclaimer) disclaimer.textContent = getRandomEmptyMessage();
+      if (info) info.textContent = "Ketuk tombol + untuk menambah tugas baru";
+    } else {
+      if (disclaimer) disclaimer.textContent = "Update data secara manual di sini";
+      if (info) info.textContent = "Ketuk tugas untuk menandainya sebagai selesai";
     }
 
-    // Map data + hidden filter
-    tasks = rows
-      .filter(r => r.title)
-      .map(r => ({
-        id: r.id || crypto.randomUUID(),
-        category: r.category || '',
-        title: r.title || '',
-        deadlineDate: r.deadlineDate || '',
-        hidden: normalizeHidden(r.hidden) // kolom "hidden" dari CSV
-      }))
-      .filter(t => !t.hidden); // hanya tampilkan yang hidden = false (0)
+    // Update last updated timestamp
+    if (footerLU) {
+      const lastUpdate = localStorage.getItem('lastUpdated');
+      if (lastUpdate) {
+        footerLU.textContent = `Terakhir diperbaharui: ${lastUpdate}`;
+      } else {
+        footerLU.textContent = `Terakhir diperbaharui: Baru saja`;
+      }
+    }
 
     // Render kartu (awal: .is-hidden jika pertama)
     renderTasks();
@@ -176,7 +195,7 @@ function revealCards(stagger = 80) {
 // Fade-in halaman saat siap
 window.addEventListener('DOMContentLoaded', () => {
   requestAnimationFrame(() => document.body.classList.add('is-ready'));
-  loadTasksFromCSV();
+  loadTasksFromStorage_UI();
 });
 
 // ===================
@@ -228,6 +247,21 @@ function toggleCompleted(taskId) {
   else completed.push(taskId);
   saveCompletedTasks(completed);
   renderTasks(); // tidak menambah .is-hidden lagi karena hasAnimatedCards = true
+}
+
+// ===================
+// Delete task
+// ===================
+function deleteTask(taskId) {
+  tasks = tasks.filter(t => t.id !== taskId);
+  saveTasksToStorage(tasks);
+  
+  // Hapus juga dari completed tasks
+  let completed = getCompletedTasks();
+  completed = completed.filter(id => id !== taskId);
+  saveCompletedTasks(completed);
+  
+  renderTasks();
 }
 
 // ===================
@@ -291,8 +325,68 @@ function normalizeHidden(v) {
 }
 
 // ===================
-// Render UI
+// Task Modal
 // ===================
+function openTaskModal(task) {
+  const modal = document.createElement('div');
+  modal.className = 'task-modal-overlay';
+  modal.innerHTML = `
+    <div class="task-modal">
+      <div class="task-modal-header">
+        <h3 class="task-modal-title">${task.title}</h3>
+        <button class="task-modal-close" aria-label="Tutup">&times;</button>
+      </div>
+      <div class="task-modal-body">
+        <div class="task-modal-detail">
+          <span class="task-modal-category">${task.category}</span>
+          <span class="task-modal-deadline">${task.deadlineDate || '-'}</span>
+        </div>
+      </div>
+      <div class="task-modal-actions">
+        <button class="task-modal-btn task-modal-btn-complete" data-action="complete">
+          ${isCompleted(task.id) ? 'Tandai Belum Selesai' : 'Tandai Selesai'}
+        </button>
+        <button class="task-modal-btn task-modal-btn-delete" data-action="delete">
+          Hapus
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  const closeBtn = modal.querySelector('.task-modal-close');
+  const completeBtn = modal.querySelector('[data-action="complete"]');
+  const deleteBtn = modal.querySelector('[data-action="delete"]');
+
+  // Debug: check if deleteBtn exists
+  if (!deleteBtn) {
+    console.error('Delete button not found!');
+  }
+
+  function closeModal() {
+    modal.classList.add('fade-out');
+    setTimeout(() => modal.remove(), 200);
+  }
+
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  completeBtn.addEventListener('click', () => {
+    toggleCompleted(task.id);
+    closeModal();
+  });
+
+  deleteBtn.addEventListener('click', () => {
+    deleteTask(task.id);
+    closeModal();
+  });
+
+  // Trigger animation
+  requestAnimationFrame(() => modal.classList.add('is-visible'));
+}
 function renderTasks() {
   const container = document.getElementById('task-container'); if (!container) return;
   container.innerHTML = '';
@@ -323,8 +417,7 @@ function renderTasks() {
     card.innerHTML = `
       <div class="card-header">
         <div class="category-group">
-          <span class="category">${categoryFull}</span>
-          <span class="time">Jam ke ${time}</span>
+          <span class="category">${task.category}</span>
         </div>
         <div class="deadline-group">
           <span class="deadline ${deadlineClass}">${deadlineText}</span>
@@ -335,7 +428,7 @@ function renderTasks() {
       ${isCompleted(task.id) ? '<div class="completed-text">Ditandai sebagai selesai</div>' : ''}
     `;
 
-    card.addEventListener('click', () => toggleCompleted(task.id));
+    card.addEventListener('click', () => openTaskModal(task));
     container.appendChild(card);
   });
 
@@ -384,7 +477,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (pill.classList.contains('is-expanded')) return;
     pill.classList.add('is-expanded');
     pill.setAttribute('aria-expanded', 'true');
-    renderJadwalTable?.();
+    renderAddTaskForm();
     document.body.style.overflow = 'hidden';
   }
 
@@ -413,94 +506,81 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-async function fetchJadwalPelajaran() {
-  try {
-    const res = await fetch(`${JADWAL_CSV_URL}&t=${Date.now()}`);
-    if (!res.ok) throw new Error('Gagal fetch jadwal');
-    const csv = await res.text();
-    return parseCSV(csv); // gunakan parseCSV yang sudah ada
-  } catch (e) {
-    console.error('Gagal muat jadwal pelajaran', e);
-    return [];
-  }
-}
-
 // ===================
-// Render Lesson Schedule
+// Render Add Task Form
 // ===================
-async function renderLessonSchedule() {
-  const scheduleContainer = document.getElementById('jadwal-table');
-  scheduleContainer.innerHTML = `<h2 class="jadwal-title">Jadwal Pelajaran</h2><div class="jadwal-loading">Loading...</div>`;
-
-  const jadwalRows = await fetchJadwalPelajaran();
-
-  function mapCategory(cat) {
-    return categoryMap[cat] || (cat?.toLowerCase().includes('break') ? cat : cat || '-');
-  }
-
-  function renderKiri() {
-    return `
-      <div class="jadwal-table-group kiri">
-        <table>
-          <thead>
-            <tr>
-              <th>Jam</th>
-              <th>Waktu</th>
-              <th>Senin</th>
-              <th>Selasa</th>
-              <th>Rabu</th>
-              <th>Kamis</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${jadwalRows.map(row => `
-              <tr>
-                <td>${row.num1 || '-'}</td>
-                <td>${row.time1 || '-'}</td>
-                <td>${mapCategory(row.senin)}</td>
-                <td>${mapCategory(row.selasa)}</td>
-                <td>${mapCategory(row.rabu)}</td>
-                <td>${mapCategory(row.kamis)}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
+function renderAddTaskForm() {
+  const formContainer = document.getElementById('jadwal-table');
+  formContainer.innerHTML = `
+    <h2 style="margin-top: 0; margin-bottom: 20px; font-family: Unbounded; font-size: 1.4rem;">Tambah Tugas Baru</h2>
+    <form id="add-task-form" style="display: flex; flex-direction: column; gap: 16px;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label for="task-category" style="text-align: left; font-size: 0.9rem; color: #ccc;">Jenis Tugas</label>
+        <input type="text" id="task-category" placeholder="Contoh: Matematika, Bahasa Indonesia" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #555; background: #333; color: #eee; font-family: inherit;" required />
       </div>
-    `;
-  }
-
-  function renderKanan() {
-    return `
-      <div class="jadwal-table-group kanan">
-        <table>
-          <thead>
-            <tr>
-              <th>Jam</th>
-              <th>Waktu</th>
-              <th>Jumat</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${jadwalRows.map(row => `
-              <tr>
-                <td>${row.num2 || '-'}</td>
-                <td>${row.time2 || '-'}</td>
-                <td>${mapCategory(row.jumat)}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label for="task-title" style="text-align: left; font-size: 0.9rem; color: #ccc;">Detail Tugas</label>
+        <input type="text" id="task-title" placeholder="Contoh: PR halaman 5" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #555; background: #333; color: #eee; font-family: inherit;" required />
       </div>
-    `;
-  }
-
-  scheduleContainer.innerHTML = `
-    <h1 class="jadwal-title">Jadwal Pelajaran</h1>
-    <div class="jadwal-tables-wrapper force-side">
-      ${renderKiri()}
-      ${renderKanan()}
-    </div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <label for="task-deadline" style="text-align: left; font-size: 0.9rem; color: #ccc;">Deadline (DD Bulan YYYY)</label>
+        <input type="text" id="task-deadline" placeholder="Contoh: 15 Februari 2026" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #555; background: #333; color: #eee; font-family: inherit;" required />
+      </div>
+      <button type="submit" style="padding: 10px 16px; margin-top: 8px; border-radius: 8px; border: none; background: #43a9f9; color: #000; font-weight: 600; cursor: pointer; font-family: inherit; font-size: 1rem; transition: background 0.3s;">Tambah Tugas</button>
+    </form>
   `;
+
+  const form = document.getElementById('add-task-form');
+  form.addEventListener('submit', handleAddTask);
 }
 
-renderLessonSchedule();
+function handleAddTask(e) {
+  e.preventDefault();
+  const category = document.getElementById('task-category').value.trim();
+  const title = document.getElementById('task-title').value.trim();
+  const deadlineDate = document.getElementById('task-deadline').value.trim();
+
+  if (!category || !title || !deadlineDate) {
+    alert('Semua field harus diisi');
+    return;
+  }
+
+  const newTask = {
+    id: crypto.randomUUID(),
+    category: category,
+    title: title,
+    deadlineDate: deadlineDate,
+    hidden: false
+  };
+
+  tasks.push(newTask);
+  saveTasksToStorage(tasks);
+  
+  // Update last updated
+  const now = new Date();
+  const timeStr = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).format(now);
+  const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+  localStorage.setItem('lastUpdated', `${timeStr}, ${dateStr}`);
+
+  renderTasks();
+  
+  // Update status text jika ini task pertama
+  if (tasks.length === 1) {
+    const disclaimer = document.getElementById('disclaimer');
+    const info = document.getElementById('info');
+    if (disclaimer) disclaimer.textContent = "Update data secara manual di sini";
+    if (info) info.textContent = "Ketuk tugas untuk menandainya sebagai selesai";
+  }
+  
+  // Reset form
+  document.getElementById('task-category').value = '';
+  document.getElementById('task-title').value = '';
+  document.getElementById('task-deadline').value = '';
+
+  // Close pill
+  const pill = document.getElementById('pill');
+  if (pill.classList.contains('is-expanded')) {
+    const pillClose = document.getElementById('pill-close');
+    pillClose.click();
+  }
+}
