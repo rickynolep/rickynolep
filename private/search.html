@@ -16,7 +16,7 @@
             padding: 0;
             overflow: hidden;
             user-select: none;
-            background-color: #030206;
+            background-color: #000000;
             font-family: 'Inter', sans-serif;
             color: white;
             -webkit-font-smoothing: antialiased;
@@ -32,12 +32,6 @@
         }
 
         /* === Layout & Elements === */
-        .bg-gradient {
-            position: absolute;
-            top: 0; right: 0; bottom: 0; left: 0;
-            z-index: 0;
-            background: linear-gradient(to bottom, #030206, #05040a, #010003);
-        }
 
         #plexusCanvas {
             position: absolute;
@@ -236,9 +230,6 @@
     </style>
 </head>
 <body>
-
-    <div class="bg-gradient"></div>
-
     <canvas id="plexusCanvas"></canvas>
 
     <main class="animate-blur-in">
