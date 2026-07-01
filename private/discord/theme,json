@@ -1,0 +1,251 @@
+{
+  "name": "Ricky Amoled Theme",
+  "description": "with a spice of kyaru-chan ^w^",
+  "authors": [
+    {
+      "name": "rickynolep",
+      "id": "814386183169769512"
+    }
+  ],
+  "semanticColors": {
+    "BACKGROUND_TERTIARY": [
+      "#000000"
+    ],
+    "BACKGROUND_ACCENT": [
+      "#121212"
+    ],
+    "BACKGROUND_SECONDARY": [
+      "#000000"
+    ],
+    "BACKGROUND_MODIFIER_ACCENT": [
+      "#121212"
+    ],
+    "DIVIDER_STRONG": [
+      "#000000"
+    ],
+    "DIVIDER_SUBTLE": [
+      "#000000"
+    ],
+    "BORDER_SUBTLE": [
+      "#000000"
+    ],
+    "SPINE_DEFAULT": [
+      "#000000"
+    ],
+    "SPOILER_HIDDEN_BACKGROUND": [
+      "#121212"
+    ],
+    "SPOILER_REVEALED_BACKGROUND": [
+      "#121212"
+    ],
+    "STAGE_CARD_PILL_BG": [
+      "#000000"
+    ],
+    "STATUS_DANGER": [
+      "#000000"
+    ],
+    "STATUS_DANGER_BACKGROUND": [
+      "#000000"
+    ],
+    "STATUS_DANGER_TEXT": [
+      "#FFFFFF"
+    ],
+    "STATUS_DND": [
+      "#ff6161"
+    ],
+    "STATUS_IDLE": [
+      "#ffbc5b"
+    ],
+    "STATUS_OFFLINE": [
+      "#202020"
+    ],
+    "STATUS_ONLINE": [
+      "#48bc46"
+    ],
+    "STATUS_POSITIVE": [
+      "#000000"
+    ],
+    "STATUS_POSITIVE_BACKGROUND": [
+      "#000000"
+    ],
+    "STATUS_POSITIVE_TEXT": [
+      "#FFFFFF"
+    ],
+    "STATUS_SPEAKING": [
+      "#000000"
+    ],
+    "STATUS_WARNING": [
+      "#FFFFFF"
+    ],
+    "STATUS_WARNING_BACKGROUND": [
+      "#000000"
+    ],
+    "STATUS_WARNING_TEXT": [
+      "#FFFFFF"
+    ],
+    "TEXT_BRAND": [
+      "#FFFFFF"
+    ],
+    "TEXT_DANGER": [
+      "#FFFFFF"
+    ],
+    "TEXT_LINK": [
+      "#009AFF"
+    ],
+    "TEXT_LINK_LOW_SATURATION": [
+      "#6d82ff"
+    ],
+    "TEXT_LOW_CONTRAST": [
+      "#FFFFFF"
+    ],
+    "TEXT_MESSAGE_PREVIEW_LOW_SAT": [
+      "#FFFFFF"
+    ],
+    "TEXT_MUTED": [
+      "#7f7f7f"
+    ],
+    "TEXT_MUTED_ON_DEFAULT": [
+      "#FFFFFF"
+    ],
+    "TEXT_NORMAL": [
+      "#FFFFFF"
+    ],
+    "TEXT_POSITIVE": [
+      "#FFFFFF"
+    ],
+    "TEXT_PRIMARY": [
+      "#FFFFFF"
+    ],
+    "TEXT_SECONDARY": [
+      "#FFFFFF"
+    ],
+    "TEXT_WARNING": [
+      "#FFFFFF"
+    ],
+    "THEME_LOCKED_BLUR_FALLBACK": [
+      "#000000"
+    ],
+    "THREAD_CHANNEL_SPINE": [
+      "#FFFFFF"
+    ],
+    "TOAST_BG": [
+      "#000000"
+    ],
+    "TYPING_INDICATOR_BG": [
+      "#000000"
+    ],
+    "USER_PROFILE_HEADER_OVERFLOW_BACKGROUND": [
+      "#000000"
+    ],
+    "VOICE_VIDEO_VIDEO_TILE_BACKGROUND": [
+      "#000000"
+    ],
+    "VOICE_VIDEO_VIDEO_TILE_BLUR_FALLBACK": [
+      "#000000"
+    ],
+    "WHITE": [
+      "#FFFFFF"
+    ],
+    "SCROLLBAR_THIN_THUMB": [
+      "#FFFFFF"
+    ],
+    "SCROLLBAR_THIN_TRACK": [
+      "#000000"
+    ],
+    "SCROLLBAR_AUTO_THUMB": [
+      "#FFFFFF"
+    ],
+    "REDESIGN_BUTTON_TERTIARY_BACKGROUND": [
+      "#000000"
+    ],
+    "REDESIGN_CHAT_INPUT_BACKGROUND": [
+      "#000000"
+    ],
+    "SCROLLBAR_AUTO_TRACK": [
+      "#FFFFFF"
+    ],
+    "REDESIGN_INPUT_CONTROL_SELECTED": [
+      "#36393E"
+    ],
+    "INTERACTIVE_MUTED": [
+      "#121212"
+    ],
+    "CHAT_INPUT_CONTAINER_BACKGROUND": [
+      "#000000"
+    ],
+    "MENTION_BADGE": [
+      "#ff6161"
+    ],
+    "REDESIGN_MENTION_BADGE": [
+      "#ff6161"
+    ]
+  },
+  "rawColors": {
+    "BLACK_500": "#00000050",
+    "BRAND_260": "#FFFFFF",
+    "BRAND_360": "#FFFFFF",
+    "BRAND_560": "#000000",
+    "BRAND_500": "#121212",
+    "ORANGE_260": "#FFFFFF",
+    "ORANGE_300": "#FFFFFF",
+    "ORANGE_330": "#FFFFFF",
+    "ORANGE_345": "#FFFFFF",
+    "ORANGE_360": "#FFFFFF",
+    "ORANGE_400": "#FFFFFF",
+    "ORANGE_430": "#FFFFFF",
+    "ORANGE_460": "#FFFFFF",
+    "ORANGE_500": "#FFFFFF",
+    "ORANGE_530": "#FFFFFF",
+    "ORANGE_560": "#FFFFFF",
+    "ORANGE_600": "#FFFFFF",
+    "ORANGE_630": "#FFFFFF",
+    "ORANGE_660": "#FFFFFF",
+    "ORANGE_700": "#FFFFFF",
+    "YELLOW_260": "#FFFFFF",
+    "YELLOW_300": "#FFFFFF",
+    "YELLOW_330": "#FFFFFF",
+    "YELLOW_345": "#FFFFFF",
+    "YELLOW_360": "#FFFFFF",
+    "YELLOW_400": "#FFFFFF",
+    "YELLOW_430": "#FFFFFF",
+    "YELLOW_460": "#FFFFFF",
+    "YELLOW_500": "#FFFFFF",
+    "YELLOW_530": "#FFFFFF",
+    "YELLOW_560": "#FFFFFF",
+    "YELLOW_600": "#FFFFFF",
+    "YELLOW_630": "#FFFFFF",
+    "YELLOW_660": "#FFFFFF",
+    "YELLOW_700": "#FFFFFF",
+    "RED_430": "#009AFF",
+    "PLUM_14": "#222222",
+    "PRIMARY_800": "#222222",
+    "PLUM_1": "#FFFFFF",
+    "PLUM_22": "#000000",
+    "PRIMARY_660": "#000000",
+    "PRIMARY_700": "#000000",
+    "PRIMARY_560": "#000000",
+    "PRIMARY_600": "#000000",
+    "PRIMARY_630": "#000000",
+    "PLUM_15": "#121212",
+    "PLUM_17": "#000000",
+    "PLUM_18": "#000000",
+    "PLUM_19": "#000000",
+    "PLUM_20": "#000000",
+    "PLUM_23": "#000000",
+    "PLUM_24": "#000000"
+  },
+  "background": {
+    "url": "https://ricky.is-a.dev/private/discord/background.jpg",
+    "blur": 0.5,
+    "alpha": 0.25,
+    "size": "cover",
+    "position": "center"
+  },
+  "plus": {
+    "version": "0",
+    "iconpack": "solar"
+  },
+  "spec": 2,
+  "createdAt": "2026-07-01",
+  "source": "local"
+}
